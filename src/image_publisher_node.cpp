@@ -38,10 +38,10 @@ int main(int argc, char** argv) {
     ros::Publisher pub = n.advertise<sensor_msgs::Image>("camera_image", 100);
     ros::Publisher camera_info_pub = n.advertise<sensor_msgs::CameraInfo>("camera_info", 100);
 
-    sensor_msgs::CameraInfo info;
+    // sensor_msgs::CameraInfo info;
 
-    camera_info_manager::CameraInfoManager manager(n, "camera", "file:///tmp/calibrationdata/ost.yaml");
-    info = manager.getCameraInfo();
+    // camera_info_manager::CameraInfoManager manager(n, "camera", "file:///tmp/calibrationdata/ost.yaml");
+    // info = manager.getCameraInfo();
 
     ros::Rate rate(24);
 
@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
         msg = cv_bridge::CvImage(std_msgs::Header(), sensor_msgs::image_encodings::BGR8, frame).toImageMsg();
         // cv::waitKey(1);
         pub.publish(msg);
-        camera_info_pub.publish(info);
+        // camera_info_pub.publish(info);
 
         rate.sleep();
     }
