@@ -78,7 +78,7 @@ bool ArucoDetector::PoseEstimate() {
       pose.position.x = tvecs[i][0];
       pose.position.y = tvecs[i][1];
       pose.position.z = tvecs[i][2];
-      
+
       poseArray_.poses.emplace_back(pose);
 
     }
@@ -87,14 +87,24 @@ bool ArucoDetector::PoseEstimate() {
       double dx = abs(poseArray_.poses[0].position.x - poseArray_.poses[1].position.x);
       double dy = abs(poseArray_.poses[0].position.y - poseArray_.poses[1].position.y);
       double dz = abs(poseArray_.poses[0].position.z - poseArray_.poses[1].position.z);
-      double dnorm = std::sqrt(dx*dx+dy*dy+dz*dz);
+      double dnorm = std::sqrt(dx * dx + dy * dy + dz * dz);
       std::cout << " distance: " << dx << " " << dy << " " << dz << " " << dnorm << std::endl;
-      std::cout << "abs angle 0: " << 180 - cv::norm(rvecs[0])*180/M_PI << std::endl;
-      std::cout << "abs angle 1: " << 180 - cv::norm(rvecs[1])*180/M_PI << std::endl;
+      std::cout << "abs angle 0: " << 180 - cv::norm(rvecs[0]) * 180 / M_PI << std::endl;
+      std::cout << "abs angle 1: " << 180 - cv::norm(rvecs[1]) * 180 / M_PI << std::endl;
       std::cout << " aa0 " << rvecs[0] << std::endl;
       std::cout << " aa1 " << rvecs[1] << std::endl;
       std::cout << " t0 " << tvecs[0] << std::endl;
       std::cout << " t1 " << tvecs[1] << std::endl;
+
+      // test first pose
+      Eigen::Quaterniond q0(
+        poseArray_.poses[0].orientation.w,
+        poseArray_.poses[0].orientation.x,
+        poseArray_.poses[0].orientation.y,
+        poseArray_.poses[0].orientation.z);
+        double angle_y = abs(q0.toRotationMatrix().eulerAngles(2, 1, 3).y() * 180 / M_PI);
+
+        std::cout << "angle y: " << (180 - angle_y) << std::endl;;
     }
 
     Publish();
@@ -109,7 +119,7 @@ void ArucoDetector::Publish() {
 }
 
 void ArucoDetector::Optim() {
-  
+
 }
 
 /**

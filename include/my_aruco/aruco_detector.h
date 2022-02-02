@@ -7,6 +7,8 @@
 #include <opencv4/opencv2/opencv.hpp>
 #include <opencv4/opencv2/aruco.hpp>
 
+#include <Eigen/Core>
+#include <Eigen/Geometry>
 #include <ros/ros.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseStamped.h>
