@@ -1,0 +1,30 @@
+%YAML:1.0
+
+# ==================== camera informations ====================
+width: 640
+height: 480
+# camera matrix
+K: !!opencv-matrix
+    rows: 3
+    cols: 3
+    dt: f
+    data: [ 660.158566, 0.000000, 319.013077, 0.000000, 662.195692, 246.567240, 0.000000, 0.000000, 1.000000 ]
+
+# distortion coefficients
+D: !!opencv-matrix
+    rows: 1
+    cols: 5
+    dt: f
+    data: [ 0.039830, -0.139520, -0.001142, 0.000870, 0.000000 ]
+
+
+camera_frame_id: "camera"
+
+# ==================== marker informations ====================
+# marker informations
+marker_length: 0.079
+
+# ==================== ros informations ====================
+do_publish: 0  # 0 for false 1 for true
+topic_name_marker_poses: "marker_poses"
+topic_name_aruco_image: "aruco_image"

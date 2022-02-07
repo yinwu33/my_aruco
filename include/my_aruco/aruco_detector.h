@@ -16,14 +16,18 @@
 #include <sensor_msgs/Image.h>
 #include <cv_bridge/cv_bridge.h>
 
+#include "my_aruco/image_subscriber.h"
+
 namespace my_aruco {
 class ArucoDetector {
 public:
-  ArucoDetector();
+  ArucoDetector(std::shared_ptr<cv::FileStorage> fs, ImageSubscriber::Ptr pImageSub);
 
-  ArucoDetector(ros::NodeHandle& nh);
+  ArucoDetector(std::shared_ptr<cv::FileStorage> fs, ImageSubscriber::Ptr pImageSub, ros::NodeHandle& nh);
 
-  bool Detect(std::deque<std::shared_ptr<cv::Mat>>& dq_buffer);
+  void Initialize();
+
+  bool Detect();
 
   bool PoseEstimate();
 
@@ -31,11 +35,13 @@ public:
 
   void Optim();
 
+  void Run();
+
 private:
-  bool do_publish_ = false;
 
   std::vector<int> markerIds_;
   std::vector<std::vector<cv::Point2f>> markerCorners_, rejectedCandidates_;
+  std::vector<cv::Vec3d> rvecs_, tvecs_;
 
   cv::Ptr <cv::aruco::DetectorParameters> parameters_;
   cv::Ptr<cv::aruco::Dictionary> dictionary_;
@@ -46,16 +52,27 @@ private:
   //
   cv::Mat image_;
 
-  // * for ros publisher
+  double markerSize_;
+
+  std::deque<std::shared_ptr<cv::Mat>> dqBuffer_;
+
+  // image subscriber
+  // std::shared_ptr<ImageSubscriber> pImageSub_;
+  ImageSubscriber::Ptr pImageSub_;
+
+  // config file
+  std::shared_ptr<cv::FileStorage> fs_;
+
+  // ROS
+  bool bDoPublish_ = false;
+
+  ros::NodeHandle nh_;
   ros::Publisher pose_pub_;
   ros::Publisher aruco_image_pub_;
 
-
   geometry_msgs::PoseArray poseArray_;
   sensor_msgs::ImagePtr aruco_image_;
-  std::string frame_id_;
-
-  double markerSideLength_;
+  std::string frameId;
 };
 
 }

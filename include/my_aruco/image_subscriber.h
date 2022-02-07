@@ -15,6 +15,9 @@ namespace my_aruco
 {
 class ImageSubscriber {
 public:
+  typedef std::shared_ptr<ImageSubscriber> Ptr;
+public:
+  ImageSubscriber() = delete;
   ImageSubscriber(ros::NodeHandle& nh, std::string topic_name, size_t buffer_size);
 
   void MsgCallback(const sensor_msgs::ImageConstPtr& msg);
@@ -32,7 +35,7 @@ private:
 };
 
 } // namespace my_aruco
-
+ 
 
 
 #endif // MY_ARUCO_IMAGE_SUBSCRIBER_H
