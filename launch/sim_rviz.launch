@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="model" default="front_robot.xacro"/>
+  <arg name="gui" default="true"/>
+
+  <!-- <param name="robot_description" textfile="$(find my_aruco)/model/$(arg model)"/> -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find my_aruco)/model/$(arg model)'"/>
+  
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" required="true"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+
+  <!-- <node pkg="my_aruco" type="my_aruco_node" name="my_aruco_node" output="screen" required="true">
+        <param name="config_file" value="$(find my_aruco)/config/example.yaml"/>
+  </node> -->
+
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find my_aruco)/rviz.rviz" required="true"/>
+</launch>
