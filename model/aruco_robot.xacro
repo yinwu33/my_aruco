@@ -64,7 +64,7 @@
   </link>
 
   <gazebo reference="base">
-    <material>Gazebo/Blue</material>
+    <material>aruco/material</material>
   </gazebo>
 
   <link name="tcp">

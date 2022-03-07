@@ -15,6 +15,7 @@
 #include <geometry_msgs/PoseArray.h>
 #include <sensor_msgs/Image.h>
 #include <cv_bridge/cv_bridge.h>
+#include <tf/transform_datatypes.h>
 
 #include "my_aruco/image_subscriber.h"
 
@@ -69,6 +70,8 @@ private:
   ros::NodeHandle nh_;
   ros::Publisher pose_pub_;
   ros::Publisher aruco_image_pub_;
+
+  std::vector<double> yawList_;
 
   geometry_msgs::PoseArray poseArray_;
   sensor_msgs::ImagePtr aruco_image_;
