@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="bagfile_path" default="/home/ubuntu/Workspace/KIT/slamdog/bagfiles/8_test.bag"/>
+  <arg name="image_topic" default="/camera/color/image_raw"/>
+
+  <param name="use_sim_time" value="true"/>
+
+  <node pkg="rosbag" type="play" name="player" args="--clock -l $(arg bagfile_path)"></node>
+
+  <node pkg="my_aruco" type="my_aruco_node" name="my_aruco_node" output="screen" required="true">
+    <param name="config_file" value="$(find my_aruco)/config/example.yaml"/>
+    <param name="image_topic" value="$(arg image_topic)"/>
+  </node>
+</launch>

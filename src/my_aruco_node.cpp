@@ -12,7 +12,9 @@ int main(int argc, char** argv) {
 
   ros::NodeHandle nh, nh_private("~");
 
-  // parse config file
+  // parameters
+  bool doDebug = nh_private.param<bool>("doDebug", false); // todo
+  std::string image_topic = nh_private.param<std::string>("image_topic", "camera_image");
   std::string config_file = nh_private.param<std::string>("config_file", "");
 
   if (config_file.size() == 0) {
@@ -28,7 +30,7 @@ int main(int argc, char** argv) {
   }
 
   // run
-  ImageSubscriber::Ptr pImageSub = std::make_shared<ImageSubscriber>(nh, "camera_image", 100);
+  ImageSubscriber::Ptr pImageSub = std::make_shared<ImageSubscriber>(nh, image_topic, 100);
   ArucoDetector arucoDetector(fs, pImageSub, nh);
 
   std::deque<std::shared_ptr<cv::Mat>> dq_buffer;

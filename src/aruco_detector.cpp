@@ -105,7 +105,7 @@ void ArucoDetector::Publish() {
   }
   // ! debug
   if (rvecs_.size() != 0)
-    std::cout << "yaw: " << avgYaw/rvecs_.size() << std::endl;
+    std::cout << "yaw: \nradian: " << avgYaw/rvecs_.size() << "\ndegree: "<< avgYaw/rvecs_.size() * 180 / M_PI << "\n" << std::endl;
 
   pose_pub_.publish(poseArray_);
   poseArray_.poses.clear();
