@@ -145,7 +145,7 @@ add_executable(${PROJECT_NAME}_node src/my_aruco_node.cpp
                                     src/optim/kalman_filter.cpp
                                     )
 
-add_executable(image_pub_node src/image_publisher_node.cpp
+add_executable(image_publisher_node src/image_publisher_node.cpp
 )
 
 add_executable(gt_pose_node src/gt_pose_node.cpp)
@@ -166,7 +166,7 @@ ${catkin_LIBRARIES}
 Eigen3::Eigen
 )
 
-target_link_libraries(image_pub_node
+target_link_libraries(image_publisher_node
 ${catkin_LIBRARIES}
 )
 
