@@ -8,11 +8,13 @@ project(my_aruco)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  cv_bridge
+  tf
   roscpp
-  sensor_msgs
-  std_msgs
+  cv_bridge
   camera_info_manager
+  std_msgs
+  sensor_msgs
+  geometry_msgs
 )
 
 find_package(Eigen3 REQUIRED)
@@ -138,12 +140,15 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node src/my_aruco_node.cpp
-                                    src/image_subscriber.cpp
+                                    src/subscriber/image_subscriber.cpp
                                     src/aruco_detector.cpp
+                                    src/optim/kalman_filter.cpp
                                     )
 
 add_executable(image_pub_node src/image_publisher_node.cpp
 )
+
+add_executable(gt_pose_node src/gt_pose_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -162,7 +167,12 @@ Eigen3::Eigen
 )
 
 target_link_libraries(image_pub_node
-  ${catkin_LIBRARIES}
+${catkin_LIBRARIES}
+)
+
+target_link_libraries(gt_pose_node
+${catkin_LIBRARIES}
+Eigen3::Eigen
 )
 
 #############

@@ -17,7 +17,8 @@
 #include <cv_bridge/cv_bridge.h>
 #include <tf/transform_datatypes.h>
 
-#include "my_aruco/image_subscriber.h"
+#include "my_aruco/subscriber/image_subscriber.h"
+#include "my_aruco/types/image_stamped.hpp"
 
 namespace my_aruco {
 class ArucoDetector {
@@ -32,11 +33,15 @@ public:
 
   bool PoseEstimate();
 
-  void Publish();
+  void PosePublish();
 
-  void Optim();
+  void ImagePublish();
 
-  void Run();
+  bool Run();
+
+  double getYaw() { return yaw_; }
+
+  double getTime() { return timestamp_; }
 
 private:
 
@@ -55,7 +60,7 @@ private:
 
   double markerSize_;
 
-  std::deque<std::shared_ptr<cv::Mat>> dqBuffer_;
+  std::deque<ImageStamped::Ptr> dqBuffer_;
 
   // image subscriber
   // std::shared_ptr<ImageSubscriber> pImageSub_;
@@ -76,6 +81,15 @@ private:
   geometry_msgs::PoseArray poseArray_;
   sensor_msgs::ImagePtr aruco_image_;
   std::string frameId;
+
+  double yaw_;
+
+  bool has_result_ = false;
+
+  Eigen::Quaterniond q_;
+  std::vector<Eigen::Quaterniond> qList_;
+
+  double timestamp_;
 };
 
 }

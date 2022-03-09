@@ -11,6 +11,8 @@
 
 #include <opencv2/opencv.hpp>
 
+#include "my_aruco/types/image_stamped.hpp"
+
 namespace my_aruco
 {
 class ImageSubscriber {
@@ -22,13 +24,13 @@ public:
 
   void MsgCallback(const sensor_msgs::ImageConstPtr& msg);
 
-  void ParseData(std::deque<std::shared_ptr<cv::Mat>>& dq_buffer);
+  void ParseData(std::deque<ImageStamped::Ptr>& dq_buffer);
 
 private:
   ros::NodeHandle nh_;
-  std::shared_ptr<ros::Subscriber> p_Image_sub_;
+  ros::Subscriber imageSub_;
 
-  std::deque<std::shared_ptr<cv::Mat>> dq_image_buffer_;
+  std::deque<ImageStamped::Ptr> imageBuffer_;
   size_t buffer_size_;
   std::mutex m_;
 

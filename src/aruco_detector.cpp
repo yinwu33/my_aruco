@@ -9,7 +9,7 @@ static Eigen::Quaterniond AddOffset(const Eigen::Quaterniond& input) {
   return Eigen::Quaterniond(input.matrix() * offsetMatrix);
 }
 
-static double getYaw(const Eigen::Quaterniond& q) {
+static double calculateYaw(const Eigen::Quaterniond& q) {
   Eigen::Vector3d vector = q.matrix() * Eigen::Vector3d(0, 0, 1);
   return atan2(vector[0], vector[2]);
 }
@@ -61,8 +61,9 @@ bool ArucoDetector::Detect() {
 
   for (auto it = dqBuffer_.begin(); it != dqBuffer_.end(); ++it) {
     // todo make it a list
-    image_ = (**it).clone();
-    cv::aruco::detectMarkers(**it, dictionary_, markerCorners_, markerIds_, parameters_, rejectedCandidates_);
+    timestamp_ = (**it).timestamp;
+    image_ = (**it).pImage->clone();
+    cv::aruco::detectMarkers(image_, dictionary_, markerCorners_, markerIds_, parameters_, rejectedCandidates_);
   }
   dqBuffer_.clear();
   return true;
@@ -70,25 +71,35 @@ bool ArucoDetector::Detect() {
 
 bool ArucoDetector::PoseEstimate() {
 
-  if (markerIds_.size() == 0)
-    return false;
+  // if (markerIds_.size() == 0)  // ! to be deleted
+  //   return false;
 
   cv::aruco::estimatePoseSingleMarkers(markerCorners_, markerSize_, cameraMatrix_, distCoeffs_, rvecs_, tvecs_);
 
+  double yawSum = 0.0;
+  qList_.clear();
+  for (size_t i = 0; i < rvecs_.size(); ++i) {
+    Eigen::Quaterniond q = AddOffset(GetQuaternion(rvecs_[i]));
 
+    qList_.emplace_back(q);
+
+    yawSum += calculateYaw(q);
+  }
+
+  yaw_ = yawSum / rvecs_.size();
 
   return true;
 }
 
-void ArucoDetector::Publish() {
+void ArucoDetector::PosePublish() {
   // Publish poses
-  double avgYaw = 0.0;
-  for (size_t i = 0; i < rvecs_.size(); ++i) {
+  poseArray_.poses.clear();
+  for (size_t i = 0; i < qList_.size(); ++i) {
     geometry_msgs::Pose pose;
     poseArray_.header.stamp = ros::Time::now(); // todo, use same timestamp as image
 
     // GetQuaternion(rvecs_[i], q);
-    Eigen::Quaterniond q = AddOffset(GetQuaternion(rvecs_[i]));
+    Eigen::Quaterniond q = qList_[i];
     pose.orientation.x = q.x();
     pose.orientation.y = q.y();
     pose.orientation.z = q.z();
@@ -97,49 +108,42 @@ void ArucoDetector::Publish() {
     pose.position.y = tvecs_[i][1];
     pose.position.z = tvecs_[i][2];
 
-    double yaw = getYaw(q);
-    yawList_.emplace_back(yaw);
-    avgYaw = avgYaw + yaw;
-
     poseArray_.poses.emplace_back(pose);
   }
-  // ! debug
-  if (rvecs_.size() != 0)
-    std::cout << "yaw: \nradian: " << avgYaw/rvecs_.size() << "\ndegree: "<< avgYaw/rvecs_.size() * 180 / M_PI << "\n" << std::endl;
 
   pose_pub_.publish(poseArray_);
-  poseArray_.poses.clear();
-  yawList_.clear();
 
+}
+
+void ArucoDetector::ImagePublish() {
   // Publish Image
   for (size_t i = 0; i < markerIds_.size(); ++i) {
     cv::aruco::drawAxis(image_, cameraMatrix_, distCoeffs_, rvecs_[i], tvecs_[i], 0.1);
   }
   aruco_image_ = cv_bridge::CvImage(std_msgs::Header(), "bgr8", image_).toImageMsg();
   aruco_image_pub_.publish(*aruco_image_);
-}
-
-void ArucoDetector::Optim() {
 
 }
 
-/**
- * @brief Get the Quaternion object
- *
- * @param R
- * @param Q : x, y, z, w
- */
 
-
-void ArucoDetector::Run() {
+bool ArucoDetector::Run() {
   pImageSub_->ParseData(dqBuffer_);
 
-  Detect();
+  if (!Detect()) {
+    ImagePublish();
+    return false;
+  }
 
-  PoseEstimate();
+  if (!PoseEstimate())
+    return false;
+
+  ImagePublish();
 
   if (bDoPublish_)
-    Publish();
+    PosePublish();
+
+  return true;
 }
+
 
 } // namespace my_aruco
