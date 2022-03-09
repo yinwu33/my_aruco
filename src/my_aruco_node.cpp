@@ -6,6 +6,8 @@
 #include "my_aruco/aruco_detector.h"
 #include "my_aruco/optim/kalman_filter.h"
 
+#include <geometry_msgs/PointStamped.h>
+
 using namespace my_aruco;
 
 int main(int argc, char** argv) {
@@ -17,6 +19,12 @@ int main(int argc, char** argv) {
   bool doDebug = nh_private.param<bool>("doDebug", false); // todo
   std::string image_topic = nh_private.param<std::string>("image_topic", "camera_image");
   std::string config_file = nh_private.param<std::string>("config_file", "");
+
+  // todo
+  ros::Publisher measurement_pub = nh.advertise<geometry_msgs::PointStamped>("measurenment", 100);
+  ros::Publisher estimate_pub = nh.advertise<geometry_msgs::PointStamped>("estimate", 100);
+  geometry_msgs::PointStamped measurement;
+  geometry_msgs::PointStamped estimate;
 
   // load configuration file
   if (config_file.size() == 0) {
@@ -45,12 +53,19 @@ int main(int argc, char** argv) {
     if (!arucoDetector.Run())
       continue;
 
-    double measurement = arucoDetector.getYaw();
+    double yaw_mea = arucoDetector.getYaw();
+    ros::Time time = arucoDetector.getTime();
 
-    filter.Update(measurement, arucoDetector.getTime());
+    filter.Update(yaw_mea, time);
 
-    double estimate = filter.getState();
+    double yaw_est = filter.getState();
 
-    std::cout << "measurement: " << measurement << "\nfiltered: " << estimate << "\ndiffer:" << (estimate - measurement) << std::endl << std::endl;
+    // todo
+    measurement.header.stamp = time;
+    measurement.point.x = yaw_mea;
+    estimate.header.stamp = time;
+    estimate.point.x = yaw_est;
+    measurement_pub.publish(measurement);
+    estimate_pub.publish(estimate);
   }
 }
