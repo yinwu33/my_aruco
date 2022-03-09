@@ -14,56 +14,67 @@ std::string type2str(int type) {
   uchar depth = type & CV_MAT_DEPTH_MASK;
   uchar chans = 1 + (type >> CV_CN_SHIFT);
 
-  switch ( depth ) {
-    case CV_8U:  r = "8U"; break;
-    case CV_8S:  r = "8S"; break;
-    case CV_16U: r = "16U"; break;
-    case CV_16S: r = "16S"; break;
-    case CV_32S: r = "32S"; break;
-    case CV_32F: r = "32F"; break;
-    case CV_64F: r = "64F"; break;
-    default:     r = "User"; break;
+  switch (depth) {
+  case CV_8U:  r = "8U"; break;
+  case CV_8S:  r = "8S"; break;
+  case CV_16U: r = "16U"; break;
+  case CV_16S: r = "16S"; break;
+  case CV_32S: r = "32S"; break;
+  case CV_32F: r = "32F"; break;
+  case CV_64F: r = "64F"; break;
+  default:     r = "User"; break;
   }
 
   r += "C";
-  r += (chans+'0');
+  r += (chans + '0');
 
   return r;
 }
 
 int main(int argc, char** argv) {
-    ros::init(argc, argv, "publisher");
-    ros::NodeHandle n;
+  ros::init(argc, argv, "publisher");
+  ros::NodeHandle n, nh_private("~");
 
-    ros::Publisher pub = n.advertise<sensor_msgs::Image>("camera_image", 100);
-    ros::Publisher camera_info_pub = n.advertise<sensor_msgs::CameraInfo>("camera_info", 100);
+  // parameters
+  std::string image_topic = nh_private.param<std::string>("image_topic", "image_raw");
+  int queue_size = nh_private.param<int>("queue_size", 100);
+  int fps = nh_private.param<int>("fps", 30);
+  int video = nh_private.param<int>("video", 0);
+  int width = nh_private.param<int>("width", 640);
+  int height = nh_private.param<int>("height", 480);
 
-    // sensor_msgs::CameraInfo info;
+  ROS_INFO("Parameters: \nfps: %i\nvideo: %i\nwidth: %i\nheight: %i", fps, video, width, height);
 
-    // camera_info_manager::CameraInfoManager manager(n, "camera", "file:///tmp/calibrationdata/ost.yaml");
-    // info = manager.getCameraInfo();
+  ros::Publisher pub = n.advertise<sensor_msgs::Image>(image_topic, queue_size);
+  // ros::Publisher camera_info_pub = n.advertise<sensor_msgs::CameraInfo>("camera_info", queue_size); // todo camera info
 
-    ros::Rate rate(20);
+  // sensor_msgs::CameraInfo info;
 
-    cv::VideoCapture cap;
-    if (!cap.open(0)) throw std::runtime_error("can't find camera");
-    cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
-    cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
+  // camera_info_manager::CameraInfoManager manager(n, "camera", "file:///tmp/calibrationdata/ost.yaml");
+  // info = manager.getCameraInfo();
 
-    cv::Mat frame;
-    sensor_msgs::ImagePtr msg;
+  ros::Rate rate(fps);
 
-    while (ros::ok()) {
-        cap >> frame;
+  cv::VideoCapture cap;
+  if (!cap.open(video)) throw std::runtime_error("can't find camera");
+  cap.set(cv::CAP_PROP_FRAME_WIDTH, width);
+  cap.set(cv::CAP_PROP_FRAME_HEIGHT, height);
+  // cap.set(cv::CAP_PROP_FPS, fps);
 
-        msg = cv_bridge::CvImage(std_msgs::Header(), sensor_msgs::image_encodings::BGR8, frame).toImageMsg();
-        msg->header.stamp = ros::Time::now();
-        // cv::waitKey(1);
-        pub.publish(msg);
-        // camera_info_pub.publish(info);
+  cv::Mat frame;
+  sensor_msgs::ImagePtr msg;
 
-        rate.sleep();
-    }
+  while (ros::ok()) {
+    cap >> frame;
 
-    return 0;
+    msg = cv_bridge::CvImage(std_msgs::Header(), sensor_msgs::image_encodings::BGR8, frame).toImageMsg();
+    msg->header.stamp = ros::Time::now();
+    // cv::waitKey(1);
+    pub.publish(msg);
+    // camera_info_pub.publish(info);
+
+    rate.sleep();
+  }
+
+  return 0;
 }
