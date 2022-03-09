@@ -17,11 +17,11 @@ int main(int argc, char** argv) {
 
   // load parameters
   bool doDebug = nh_private.param<bool>("doDebug", false); // todo
-  std::string image_topic = nh_private.param<std::string>("image_topic", "camera_image");
+  std::string image_topic = nh_private.param<std::string>("image_topic", "image_raw");
   std::string config_file = nh_private.param<std::string>("config_file", "");
 
   // todo
-  ros::Publisher measurement_pub = nh.advertise<geometry_msgs::PointStamped>("measurenment", 100);
+  ros::Publisher measurement_pub = nh.advertise<geometry_msgs::PointStamped>("measurement", 100);
   ros::Publisher estimate_pub = nh.advertise<geometry_msgs::PointStamped>("estimate", 100);
   geometry_msgs::PointStamped measurement;
   geometry_msgs::PointStamped estimate;
@@ -63,8 +63,10 @@ int main(int argc, char** argv) {
     // todo
     measurement.header.stamp = time;
     measurement.point.x = yaw_mea;
+    measurement.point.y = yaw_mea * 180 / M_PI;
     estimate.header.stamp = time;
     estimate.point.x = yaw_est;
+    estimate.point.y = yaw_est * 180 / M_PI;
     measurement_pub.publish(measurement);
     estimate_pub.publish(estimate);
   }

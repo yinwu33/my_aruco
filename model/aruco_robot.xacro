@@ -7,7 +7,7 @@
   <xacro:property name="base_y" value="0.5"/>
   <xacro:property name="base_z" value="0.05"/>
   <xacro:property name="link_xy" value="0.05"/>
-  <xacro:property name="link_z" value="1.5"/>
+  <xacro:property name="link_z" value="0.5"/>
   <xacro:property name="tcp_x" value="0.1"/>
   <xacro:property name="tcp_y" value="0.1"/>
   <xacro:property name="tcp_z" value="0.1"/>
@@ -40,28 +40,20 @@
 
     </collision>
 
-    <visual>
-      <origin xyz="0.0 0.0 ${base_z/2}" rpy="0.0 0.0 0.0"/>
-      <geometry>
-        <mesh filename="package://my_aruco/model/board_0.dae"/>
-      </geometry>
-
-    </visual>
-
     <inertial>
       <mass value="100"/>
       <inertia ixx="10" ixy="0.0" ixz="0.0" iyy="10" iyz="0.0" izz="10"/>
     </inertial>
 
     <!-- link -->
-    <visual>
+    <!-- <visual>
       <origin xyz="${base_x/2} 0.0 ${link_z/2}" rpy="0.0 0.0 0.0"/>
       <geometry>
         <box size="${link_xy} ${link_xy} ${link_z}"/>
       </geometry>
       <material name="blue"/>
 
-    </visual>
+    </visual> -->
 
     <collision>
       <origin xyz="${base_x/2} 0.0 ${link_z/2}" rpy="0.0 0.0 0.0"/>
@@ -73,13 +65,29 @@
 
   </link>
 
+  <link name="board">
+    <visual>
+      <origin xyz="0.0 0.0 ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/model/board_0.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <joint name="joint_base_board" type="fixed">
+    <parent link="base"/>
+    <child link="board"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
   <gazebo reference="base">
-    <material>aruco/material</material>
+    <material>Gazebo/Gray</material>
   </gazebo>
 
   <link name="tcp">
     <visual>
-      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 ${M_PI/2} 0.0"/>
       <geometry>
         <box size="${tcp_x} ${tcp_z} ${tcp_y}"/>
       </geometry>
@@ -106,13 +114,12 @@
   <joint name="joint_base_tcp" type="continuous">
     <parent link="base"/>
     <child link="tcp"/>
-    <axis xyz="1 0 0"/>
-    <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.0 0.0 ${link_z}" rpy="0 ${M_PI/2} 0"/>
   </joint>
 
   <gazebo reference="tcp">
     <sensor name="tcp_camera" type="camera" update_rate="30">
-      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 {M_PI/2}"/>
       <always_on>true</always_on>
       <camera>
         <horizental_fov>1.5707</horizental_fov>
@@ -142,6 +149,23 @@
       </plugin>
     </sensor>
 
+  </gazebo>
+
+  <transmission name="tran1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_base_board">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/rrbot</robotNamespace>
+    </plugin>
   </gazebo>
 
 

@@ -3,7 +3,7 @@
   <node pkg="my_aruco" type="image_publisher_node" name="image_publisher_node" output="screen">
     <param name="image_topic" value="image_raw"/>
     <param name="queue_size" value="100"/>
-    <param name="fps" value="20"/>
+    <param name="fps" value="24"/>
     <param name="video" value="0"/>
     <param name="width" value="640"/>
     <param name="height" value="480"/>

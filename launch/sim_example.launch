@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
 <launch>
-    <include file="$(find my_aruco)/launch/image_publish.launch" />
-
     <node pkg="my_aruco" type="my_aruco_node" name="my_aruco_node" output="screen" required="true">
-        <param name="image_topic" value="image_raw"/>
+        <param name="image_topic" value="/arm_sensor/camera/image_raw"/>
         <param name="config_file" value="$(find my_aruco)/config/example.yaml"/>
     </node>
 </launch>

@@ -35,24 +35,27 @@ int main(int argc, char** argv) {
   ros::Rate rate(30);
 
   while (ros::ok()) {
+    ros::Time now = ros::Time();
     try {
-      listener.lookupTransform(frame_id, child_frame_id, ros::Time(0), transform);
+      listener.lookupTransform(frame_id, child_frame_id, now, transform);
 
 
     }
     catch (tf::TransformException& ex) {
       ROS_ERROR("%s", ex.what());
-      // ros::Duration(1.0).sleep();
+      ros::Duration(0.5).sleep();
       continue;
     }
       tf::Quaternion q = transform.getRotation();
       Eigen::Quaterniond rotationMatrix = AddOffset(Eigen::Quaterniond(q.w(), q.x(), q.y(), q.z()));
       double yaw = calculateYaw(rotationMatrix);
 
-      pose.header.stamp = ros::Time(0);
+      pose.header.stamp = transform.stamp_;
+      // std::cout << transform.stamp_.toSec() << std::endl;
       pose.point.x = yaw;
+      pose.point.y = yaw * 180 / M_PI;  
       gt_pub.publish(pose);
-      std::cout << pose.point.x << std::endl;
+      // std::cout << pose.point.x << std::endl;
       rate.sleep();
   }
 

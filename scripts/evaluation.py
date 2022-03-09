@@ -1,41 +1,81 @@
 """The evaluation process is based on the tf from franka robot.
 """
 
+import os
+import argparse
+from datetime import datetime
+
 import rospy
-import tf
-from geometry_msgs.msg import TransformStamped
+from geometry_msgs.msg import PointStamped
 
+import numpy as np
+from matplotlib import pyplot as plt
 
-base_frame_id = "panda_link0"
-tcp_frame_id = "panda_link7"
-
-
-class TFListener():
-    def __init__(self):
-        self.buffer = tf2_ros.Buffer()
-        self.listener = tf2_ros.TransformListener(self.buffer)
-        self.tcpPose = TransformStamped()
-        self.tcpPose.header.frame_id = base_frame_id
-        self.tcpPose.child_frame_id = tcp_frame_id
+class Evaluator():
+    def __init__(self, root: str, draw: bool = False):
+        self.measurement_sub = rospy.Subscriber("measurement", PointStamped, callback=self.measurementCallback)
+        self.estimation_sub = rospy.Subscriber("estimate", PointStamped, callback=self.estimationCallback)
+        self.gt_sub = rospy.Subscriber("gt_yaw", PointStamped, callback=self.gtCallback)
         
-    def getTcpToBase(self) -> bool:
-        try:
-            trans, rot = self.buffer.lookup_transform(base_frame_id, tcp_frame_id, rospy.Time(0))  # ! not sure about the order
-            self.tcpPose.transform.translation = trans
-            self.tcpPose.transform.rotation = rot
-            return True
-        except:
-            return False
+        self.measurement_list = {"timestamp": [], "radian": [], "degree": []}
+        self.estimation_list = {"timestamp": [], "radian": [], "degree": []}
+        self.gt_list = {"timestamp": [], "radian": [], "degree": []}
         
-    def getYaw(self):
-        pass
 
+    def measurementCallback(self, msg):
+        # self.measurement_list.append(msg)
+        text, time, radian, degree = self.parseData(msg)
+        self.measurement_list["timestamp"].append(time)
+        self.measurement_list["radian"].append(radian)
+        self.fs_measurement.write(text)
+
+    def estimationCallback(self, msg):
+        text, time, radian, degree = self.parseData(msg)
+        self.estimation_list["timestamp"].append(time)
+        self.estimation_list["radian"].append(radian)
+        self.fs_estimation.write(text)
+
+    def gtCallback(self, msg):
+        text, time, radian, degree = self.parseData(msg)
+        self.gt_list["timestamp"].append(time)
+        self.gt_list["radian"].append(radian)
+        self.fs_groundtruth.write(text)
+        
+    def __enter__(self):
+        self.fs_measurement = open(os.path.join(root, "measurement.txt"), "w")
+        self.fs_estimation = open(os.path.join(root, "estimation.txt"), "w")
+        self.fs_groundtruth = open(os.path.join(root, "groundtruth.txt"), "w")
+        
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.fs_measurement.close()
+        self.fs_estimation.close()
+        self.fs_groundtruth.close()
+        
+    @staticmethod
+    def parseData(msg: PointStamped):
+        time = msg.header.stamp.to_sec()
+        radian = msg.point.x
+        degree = msg.point.y
+        
+        text = f"{time} {radian} {degree}\n"
+        return text, time, radian, degree
+    
 
 if __name__ == "__main__":
-    listener = TFListener()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--folder", "-f", default="/home/ubuntu/Workspace/KIT/slamdog/my_aruco_ws/src/my_aruco/eval")
+    parser.add_argument("--prefix", default="")
+    args = parser.parse_args()
     
-    while not rospy.is_shutdown():
-        if listener.getTcpToBase():
-            print(listener.tcpPose.transform.rotation)
+    now = datetime.now()
+    time_str = now.strftime(r"%Y-%m-%d-%H-%M-%S")
+    time_str = args.prefix + "_" + time_str if args.prefix != "" else time_str
+    
+    root = os.path.join(folder, time_str)
+    os.mkdir(root)
+    
+    rospy.init_node("evaluator_node")
+    
+    with Evaluator(root, draw=True) as evaluator:
+        rospy.spin()
         
-    
