@@ -3,15 +3,18 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <ros/ros.h>
+
 namespace my_aruco
 {
 struct ImageStamped {
   typedef std::shared_ptr<ImageStamped> Ptr;
   ImageStamped();
-  ImageStamped(double timestamp, std::shared_ptr<cv::Mat> pImage) : timestamp(timestamp), pImage(pImage) {}
+  ImageStamped(ros::Time timestamp, std::shared_ptr<cv::Mat> pImage) : timestamp(timestamp), pImage(pImage) {}
 
 
-  double timestamp;
+  double time; // ! to be deleted
+  ros::Time timestamp;
   std::shared_ptr<cv::Mat> pImage;
 };
 

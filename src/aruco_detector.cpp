@@ -57,7 +57,7 @@ void ArucoDetector::Initialize() {
 
 
 bool ArucoDetector::Detect() {
-  if (dqBuffer_.size() == 0) return false;
+  if (dqBuffer_.size() == 0) return false;  // ! return if buffer is clear
 
   for (auto it = dqBuffer_.begin(); it != dqBuffer_.end(); ++it) {
     // todo make it a list
@@ -71,8 +71,8 @@ bool ArucoDetector::Detect() {
 
 bool ArucoDetector::PoseEstimate() {
 
-  // if (markerIds_.size() == 0)  // ! to be deleted
-  //   return false;
+  if (markerIds_.size() == 0)
+    return false;
 
   cv::aruco::estimatePoseSingleMarkers(markerCorners_, markerSize_, cameraMatrix_, distCoeffs_, rvecs_, tvecs_);
 

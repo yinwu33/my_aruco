@@ -41,7 +41,7 @@ public:
 
   double getYaw() { return yaw_; }
 
-  double getTime() { return timestamp_; }
+  ros::Time getTime() { return timestamp_; }
 
 private:
 
@@ -89,7 +89,7 @@ private:
   Eigen::Quaterniond q_;
   std::vector<Eigen::Quaterniond> qList_;
 
-  double timestamp_;
+  ros::Time timestamp_;
 };
 
 }

@@ -45,6 +45,12 @@ int main(int argc, char** argv) {
     if (!arucoDetector.Run())
       continue;
 
-    filter.Update(arucoDetector.getYaw(), arucoDetector.getTime());
+    double measurement = arucoDetector.getYaw();
+
+    filter.Update(measurement, arucoDetector.getTime());
+
+    double estimate = filter.getState();
+
+    std::cout << "measurement: " << measurement << "\nfiltered: " << estimate << "\ndiffer:" << (estimate - measurement) << std::endl << std::endl;
   }
 }

@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include <ros/ros.h>
+
 namespace my_aruco
 {
 /**
@@ -26,13 +28,13 @@ public:
     const double P
   );
 
-  void Init(double x0, const double t0);
+  void Init(double x0, const ros::Time t0);
 
-  void Update(const double y, const double t);
+  void Update(const double y, const ros::Time t);
 
 
-  double getState() { return x_hat_; }
-  double getTime() { return t_; }
+  double getState() { return x_curr_; }
+  // double getTime() { return t_curr_; }
 
   /**
    * @brief Get angular velocity
@@ -52,19 +54,13 @@ private:
   // kalman gain
   double K_;
 
-  double t_last_, t_curr_;
+  ros::Time t_last_, t_curr_;
   double x_last_, x_curr_;
 
-  double x_pred_;
-
-  double t0_, t_;
-
-  double dt_;
-
+  double x_pred_, x_measure_;
 
   bool initialized_;
 
-  double x_hat_, x_hat_new_;
 };
 
 } // namespace my_aruco

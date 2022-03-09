@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
     // camera_info_manager::CameraInfoManager manager(n, "camera", "file:///tmp/calibrationdata/ost.yaml");
     // info = manager.getCameraInfo();
 
-    ros::Rate rate(24);
+    ros::Rate rate(20);
 
     cv::VideoCapture cap;
     if (!cap.open(0)) throw std::runtime_error("can't find camera");
@@ -57,6 +57,7 @@ int main(int argc, char** argv) {
         cap >> frame;
 
         msg = cv_bridge::CvImage(std_msgs::Header(), sensor_msgs::image_encodings::BGR8, frame).toImageMsg();
+        msg->header.stamp = ros::Time::now();
         // cv::waitKey(1);
         pub.publish(msg);
         // camera_info_pub.publish(info);
