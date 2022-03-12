@@ -22,9 +22,9 @@ int main(int argc, char** argv) {
 
   // todo
   ros::Publisher measurement_pub = nh.advertise<geometry_msgs::PointStamped>("measurement", 100);
-  ros::Publisher estimate_pub = nh.advertise<geometry_msgs::PointStamped>("estimate", 100);
+  ros::Publisher estimation_pub = nh.advertise<geometry_msgs::PointStamped>("estimation", 100);
   geometry_msgs::PointStamped measurement;
-  geometry_msgs::PointStamped estimate;
+  geometry_msgs::PointStamped estimation;
 
   // load configuration file
   if (config_file.size() == 0) {
@@ -64,10 +64,10 @@ int main(int argc, char** argv) {
     measurement.header.stamp = time;
     measurement.point.x = yaw_mea;
     measurement.point.y = yaw_mea * 180 / M_PI;
-    estimate.header.stamp = time;
-    estimate.point.x = yaw_est;
-    estimate.point.y = yaw_est * 180 / M_PI;
+    estimation.header.stamp = time;
+    estimation.point.x = yaw_est;
+    estimation.point.y = yaw_est * 180 / M_PI;
     measurement_pub.publish(measurement);
-    estimate_pub.publish(estimate);
+    estimation_pub.publish(estimation);
   }
 }

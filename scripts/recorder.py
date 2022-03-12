@@ -11,11 +11,15 @@ from geometry_msgs.msg import PointStamped
 import numpy as np
 from matplotlib import pyplot as plt
 
+topic_measurement = "measurement"
+topic_estimation = "estimation"
+topic_groundtruth = "groundtruth"
+
 class Evaluator():
     def __init__(self, root: str, draw: bool = False):
-        self.measurement_sub = rospy.Subscriber("measurement", PointStamped, callback=self.measurementCallback)
-        self.estimation_sub = rospy.Subscriber("estimate", PointStamped, callback=self.estimationCallback)
-        self.gt_sub = rospy.Subscriber("gt_yaw", PointStamped, callback=self.gtCallback)
+        self.measurement_sub = rospy.Subscriber(topic_measurement, PointStamped, callback=self.measurementCallback)
+        self.estimation_sub = rospy.Subscriber(topic_estimation, PointStamped, callback=self.estimationCallback)
+        self.gt_sub = rospy.Subscriber(topic_groundtruth, PointStamped, callback=self.gtCallback)
         
         self.measurement_list = {"timestamp": [], "radian": [], "degree": []}
         self.estimation_list = {"timestamp": [], "radian": [], "degree": []}
@@ -63,7 +67,7 @@ class Evaluator():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--folder", "-f", default="/home/ubuntu/Workspace/KIT/slamdog/my_aruco_ws/src/my_aruco/eval")
+    parser.add_argument("--folder", "-f", default="/home/ubuntu/Workspace/KIT/slamdog/aruco_ws/src/my_aruco/eval")
     parser.add_argument("--prefix", default="")
     args = parser.parse_args()
     
@@ -71,7 +75,7 @@ if __name__ == "__main__":
     time_str = now.strftime(r"%Y-%m-%d-%H-%M-%S")
     time_str = args.prefix + "_" + time_str if args.prefix != "" else time_str
     
-    root = os.path.join(folder, time_str)
+    root = os.path.join(args.folder, time_str)
     os.mkdir(root)
     
     rospy.init_node("evaluator_node")

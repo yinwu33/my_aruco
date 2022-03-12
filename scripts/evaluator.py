@@ -66,7 +66,7 @@ def draw(root: str):
   
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
-  parser.add_argument("--root", "-r", default="/home/ubuntu/Workspace/KIT/slamdog/my_aruco_ws/src/my_aruco/eval/1")
+  parser.add_argument("--root", "-r", default="/home/ubuntu/Workspace/KIT/slamdog/aruco_ws/src/my_aruco/eval/sim_4")
   args = parser.parse_args()
   
   draw(args.root)

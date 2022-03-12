@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="aruco_robot">
+
+
+  <xacro:property name="M_PI" value="3.1415926"/>
+  <xacro:property name="base_x" value="0.5"/>
+  <xacro:property name="base_y" value="1.0"/>
+  <xacro:property name="base_z" value="0.05"/>
+  <xacro:property name="link_xy" value="0.05"/>
+  <xacro:property name="link_z" value="1.0"/>
+  <xacro:property name="tcp_x" value="0.1"/>
+  <xacro:property name="tcp_y" value="0.1"/>
+  <xacro:property name="tcp_z" value="0.1"/>
+  <xacro:property name="move" value="0.1"/>
+  <xacro:property name="board_edge" value="0.1"/>
+
+  <material name="blue">
+    <color rgba="0.0 0.5 1.0 1.0"/>
+  </material>
+
+  <material name="red">
+    <color rgba="1.0 0.5 0.0 1.0"/>
+  </material>
+
+  <!-- base -->
+  <link name="base">
+    <!-- base -->
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <box size="${base_x} ${base_y} ${base_z}"/>
+      </geometry>
+      <material name="blue"/>
+
+    </visual>
+
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <box size="${base_x} ${base_y} ${base_z}"/>
+      </geometry>
+
+    </collision>
+
+    <inertial>
+      <mass value="100"/>
+      <inertia ixx="10" ixy="0.0" ixz="0.0" iyy="10" iyz="0.0" izz="10"/>
+    </inertial>
+
+    <!-- link -->
+    <!-- <visual>
+      <origin xyz="${base_x/2} 0.0 ${link_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <box size="${link_xy} ${link_xy} ${link_z}"/>
+      </geometry>
+      <material name="blue"/>
+
+    </visual> -->
+
+    <collision>
+      <origin xyz="${base_x/2} 0.0 ${link_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <box size="${link_xy} ${link_xy} ${link_z}"/>
+      </geometry>
+
+    </collision>
+
+  </link>
+
+  <!-- board -->
+  <link name="board_0">
+    <visual>
+      <origin xyz="${-move} ${move} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/model/markers/board_0.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_1">
+    <visual>
+      <origin xyz="${move} ${move} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/model/markers/board_1.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_2">
+    <visual>
+      <origin xyz="${move} ${-move} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/model/markers/board_2.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_3">
+    <visual>
+      <origin xyz="${-move} ${-move} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/model/markers/board_3.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+
+  <!-- tcp -->
+  <link name="tcp">
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 ${M_PI/2} 0.0"/>
+      <geometry>
+        <box size="${tcp_x} ${tcp_z} ${tcp_y}"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <box size="${tcp_x} ${tcp_z} ${tcp_y}"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+    </inertial>
+  </link>
+
+
+  <!-- joint -->
+
+  <joint name="joint_base_tcp" type="continuous">
+    <parent link="base"/>
+    <child link="tcp"/>
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.0 0.0 ${link_z}" rpy="0 ${M_PI/2} 0"/>
+  </joint>
+
+  <joint name="joint_base_board_0" type="fixed">
+    <parent link="base"/>
+    <child link="board_0"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_1" type="fixed">
+    <parent link="base"/>
+    <child link="board_1"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_2" type="fixed">
+    <parent link="base"/>
+    <child link="board_2"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_3" type="fixed">
+    <parent link="base"/>
+    <child link="board_3"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <!-- gazebo -->
+
+  <gazebo reference="base">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+
+  <gazebo reference="tcp">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <gazebo reference="tcp">
+    <sensor name="tcp_camera" type="camera" update_rate="30">
+      <always_on>true</always_on>
+      <camera>
+        <horizental_fov>1.5707</horizental_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>RGB8</format>
+        </image>
+        <clip>
+          <near>0.01</near>
+          <far>8.0</far>
+        </clip>
+      </camera>
+      <plugin name="camera_camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>camera</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+
+  </gazebo>
+
+  <transmission name="tcp_joint_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_base_tcp">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="tcp_joint_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/aruco_robot</robotNamespace>
+    </plugin>
+  </gazebo>
+
+
+</robot>

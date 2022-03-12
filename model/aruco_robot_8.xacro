@@ -4,13 +4,15 @@
 
   <xacro:property name="M_PI" value="3.1415926"/>
   <xacro:property name="base_x" value="0.5"/>
-  <xacro:property name="base_y" value="0.5"/>
+  <xacro:property name="base_y" value="1.0"/>
   <xacro:property name="base_z" value="0.05"/>
   <xacro:property name="link_xy" value="0.05"/>
-  <xacro:property name="link_z" value="0.5"/>
+  <xacro:property name="link_z" value="1.0"/>
   <xacro:property name="tcp_x" value="0.1"/>
   <xacro:property name="tcp_y" value="0.1"/>
   <xacro:property name="tcp_z" value="0.1"/>
+  <xacro:property name="move" value="0.1"/>
+  <xacro:property name="board_edge" value="0.1"/>
 
   <material name="blue">
     <color rgba="0.0 0.5 1.0 1.0"/>
@@ -20,7 +22,7 @@
     <color rgba="1.0 0.5 0.0 1.0"/>
   </material>
 
-
+  <!-- base -->
   <link name="base">
     <!-- base -->
     <visual>
@@ -65,26 +67,88 @@
 
   </link>
 
-  <link name="board">
+  <!-- board -->
+  <link name="board_0">
     <visual>
-      <origin xyz="0.0 0.0 ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <origin xyz="${-move} ${move} ${base_z/2}" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="package://my_aruco/model/board_0.dae"/>
+        <mesh filename="package://my_aruco/model/markers/board_0.dae"/>
       </geometry>
 
     </visual>
   </link>
 
-  <joint name="joint_base_board" type="fixed">
-    <parent link="base"/>
-    <child link="board"/>
-    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
-  </joint>
+  <link name="board_1">
+    <visual>
+      <origin xyz="${move} ${move} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/model/markers/board_1.dae"/>
+      </geometry>
 
-  <gazebo reference="base">
-    <material>Gazebo/Gray</material>
-  </gazebo>
+    </visual>
+  </link>
 
+  <link name="board_2">
+    <visual>
+      <origin xyz="${move} ${-move} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/model/markers/board_2.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_3">
+    <visual>
+      <origin xyz="${-move} ${-move} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/model/markers/board_3.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_4">
+    <visual>
+      <origin xyz="${-move} ${2*move + board_edge} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/model/markers/board_4.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_5">
+    <visual>
+      <origin xyz="${move} ${2*move + board_edge} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/model/markers/board_5.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_6">
+    <visual>
+      <origin xyz="${move} ${-2*move - board_edge} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/model/markers/board_6.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_7">
+    <visual>
+      <origin xyz="${-move} ${-2*move - board_edge} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/model/markers/board_7.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <!-- tcp -->
   <link name="tcp">
     <visual>
       <origin xyz="0.0 0.0 0.0" rpy="0.0 ${M_PI/2} 0.0"/>
@@ -103,13 +167,12 @@
 
     <inertial>
       <mass value="0.1"/>
-      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.005" iyz="0.0" izz="0.005"/>
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
     </inertial>
   </link>
 
-  <gazebo reference="tcp">
-    <material>Gazebo/Red</material>
-  </gazebo>
+
+  <!-- joint -->
 
   <joint name="joint_base_tcp" type="continuous">
     <parent link="base"/>
@@ -117,6 +180,64 @@
     <axis xyz="0 0 1"/>
     <origin xyz="0.0 0.0 ${link_z}" rpy="0 ${M_PI/2} 0"/>
   </joint>
+
+  <joint name="joint_base_board_0" type="fixed">
+    <parent link="base"/>
+    <child link="board_0"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_1" type="fixed">
+    <parent link="base"/>
+    <child link="board_1"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_2" type="fixed">
+    <parent link="base"/>
+    <child link="board_2"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_3" type="fixed">
+    <parent link="base"/>
+    <child link="board_3"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_4" type="fixed">
+    <parent link="base"/>
+    <child link="board_4"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_5" type="fixed">
+    <parent link="base"/>
+    <child link="board_5"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_6" type="fixed">
+    <parent link="base"/>
+    <child link="board_6"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_7" type="fixed">
+    <parent link="base"/>
+    <child link="board_7"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <!-- gazebo -->
+
+  <gazebo reference="base">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+
+  <gazebo reference="tcp">
+    <material>Gazebo/Red</material>
+  </gazebo>
 
   <gazebo reference="tcp">
     <sensor name="tcp_camera" type="camera" update_rate="30">
