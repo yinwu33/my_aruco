@@ -136,7 +136,7 @@
       <plugin name="camera_camera_controller" filename="libgazebo_ros_camera.so">
         <alwaysOn>true</alwaysOn>
         <updateRate>0.0</updateRate>
-        <cameraName>arm_sensor/camera</cameraName>
+        <cameraName>camera</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
         <frameName>camera_link</frameName>
@@ -151,20 +151,20 @@
 
   </gazebo>
 
-  <transmission name="tran1">
+  <transmission name="tcp_joint_trans">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="joint_base_board">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    <joint name="joint_base_tcp">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="motor1">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    <actuator name="tcp_joint_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
 
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/rrbot</robotNamespace>
+      <robotNamespace>/aruco_robot</robotNamespace>
     </plugin>
   </gazebo>
 
