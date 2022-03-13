@@ -1,0 +1,17 @@
+%YAML:1.0
+
+kalman_filter_ddrobot:
+  leftVelTopic: "slamdog/joint_left_controller/command"
+  rightVelTopic: "slamdog/joint_right_controller/command"
+  measurementTopic: "measurement"
+  predictionTopic: "prediction"
+  estimationTopic: "estimation"
+
+  P0: 1.0
+  Q: 1.0
+  R: 1.0
+
+  b1: 0.8
+  b2: 0.8
+  l1: 0.35
+  l2: 1.5

@@ -14,7 +14,7 @@ static Eigen::Quaterniond AddOffset(const Eigen::Quaterniond& input) {
 }
 
 static double calculateYaw(const Eigen::Quaterniond& q) {
-  Eigen::Vector3d vector = q.matrix() * Eigen::Vector3d(0, 0, 1); // real
+  // Eigen::Vector3d vector = q.matrix() * Eigen::Vector3d(0, 0, 1); // real
   Eigen::Vector3d vector = q.matrix() * Eigen::Vector3d(0, 1, 0); // sim
   // std::cout << vector.transpose() << std::endl;
   // return atan2(vector[0], vector[2]); // real

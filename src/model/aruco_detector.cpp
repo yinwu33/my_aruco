@@ -1,4 +1,4 @@
-#include "my_aruco/aruco_detector.h"
+#include "my_aruco/model/aruco_detector.h"
 
 namespace my_aruco
 {

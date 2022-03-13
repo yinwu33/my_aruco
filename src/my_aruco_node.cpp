@@ -3,10 +3,11 @@
 #include <opencv2/core.hpp>
 
 #include "my_aruco/subscriber/image_subscriber.h"
-#include "my_aruco/aruco_detector.h"
+#include "my_aruco/model/aruco_detector.h"
 #include "my_aruco/optim/kalman_filter.h"
 
 #include <geometry_msgs/PointStamped.h>
+#include <std_msgs/Float64.h>
 
 using namespace my_aruco;
 
@@ -21,10 +22,10 @@ int main(int argc, char** argv) {
   std::string config_file = nh_private.param<std::string>("config_file", "");
 
   // todo
-  ros::Publisher measurement_pub = nh.advertise<geometry_msgs::PointStamped>("measurement", 100);
-  ros::Publisher estimation_pub = nh.advertise<geometry_msgs::PointStamped>("estimation", 100);
-  geometry_msgs::PointStamped measurement;
-  geometry_msgs::PointStamped estimation;
+  ros::Publisher measurement_pub = nh.advertise<std_msgs::Float64>("measurement", 100);
+  // ros::Publisher estimation_pub = nh.advertise<std_msgs::Float64>("estimation", 100);
+  std_msgs::Float64 measurement;
+  // geometry_msgs::PointStamped estimation;
 
   // load configuration file
   if (config_file.size() == 0) {
@@ -46,6 +47,8 @@ int main(int argc, char** argv) {
 
   std::deque<std::shared_ptr<cv::Mat>> dq_buffer;  // ! to be deleted
 
+  ros::Rate rate(200);
+
   // run
   while (ros::ok()) {
     ros::spinOnce();
@@ -61,13 +64,15 @@ int main(int argc, char** argv) {
     double yaw_est = filter.getState();
 
     // todo
-    measurement.header.stamp = time;
-    measurement.point.x = yaw_mea;
-    measurement.point.y = yaw_mea * 180 / M_PI;
-    estimation.header.stamp = time;
-    estimation.point.x = yaw_est;
-    estimation.point.y = yaw_est * 180 / M_PI;
+    measurement.data = yaw_mea;
+    // measurement.point.x = yaw_mea;
+    // measurement.point.y = yaw_mea * 180 / M_PI;
+    // estimation.header.stamp = time;
+    // estimation.point.x = yaw_est;
+    // estimation.point.y = yaw_est * 180 / M_PI;
     measurement_pub.publish(measurement);
-    estimation_pub.publish(estimation);
+    // estimation_pub.publish(estimation);
+
+    rate.sleep();
   }
 }

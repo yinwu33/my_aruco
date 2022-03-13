@@ -4,7 +4,7 @@ from std_msgs.msg import Float64
 
 M_PI = 3.1415926
 
-RANGE = 22.5
+RANGE = 30
 RESOLUTION = 0.1
 RATE = 100
 

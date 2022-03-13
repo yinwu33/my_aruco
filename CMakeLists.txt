@@ -141,14 +141,17 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node src/my_aruco_node.cpp
                                     src/subscriber/image_subscriber.cpp
-                                    src/aruco_detector.cpp
+                                    src/model/aruco_detector.cpp
                                     src/optim/kalman_filter.cpp
                                     )
 
 add_executable(image_publisher_node src/image_publisher_node.cpp
 )
 
-add_executable(gt_pose_node src/gt_pose_node.cpp)
+add_executable(groundtruth_publisher_node src/groundtruth_publisher_node.cpp)
+
+add_executable(optim_node src/optim_node.cpp
+                          src/optim/kalman_filter_ddrobot.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -170,10 +173,14 @@ target_link_libraries(image_publisher_node
 ${catkin_LIBRARIES}
 )
 
-target_link_libraries(gt_pose_node
+target_link_libraries(groundtruth_publisher_node
 ${catkin_LIBRARIES}
 Eigen3::Eigen
 )
+
+target_link_libraries(optim_node
+${catkin_LIBRARIES}
+Eigen3::Eigen)
 
 #############
 ## Install ##
@@ -184,10 +191,11 @@ Eigen3::Eigen
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+catkin_install_python(PROGRAMS
+  scripts/slamdog_controller_node.py
+  scripts/robot_controller_node.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html

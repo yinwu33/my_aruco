@@ -68,11 +68,81 @@
   </link>
 
   <!-- board -->
-  <link name="board">
+  <link name="board_0">
     <visual>
-      <origin xyz="0.0 0.0 ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <origin xyz="${-move} ${move} ${base_z/2}" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="package://my_aruco/model/markers/board_0.dae"/>
+        <mesh filename="package://my_aruco/urdf/markers/board_0.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_1">
+    <visual>
+      <origin xyz="${move} ${move} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/urdf/markers/board_1.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_2">
+    <visual>
+      <origin xyz="${move} ${-move} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/urdf/markers/board_2.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_3">
+    <visual>
+      <origin xyz="${-move} ${-move} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/urdf/markers/board_3.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_4">
+    <visual>
+      <origin xyz="${-move} ${2*move + board_edge} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/urdf/markers/board_4.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_5">
+    <visual>
+      <origin xyz="${move} ${2*move + board_edge} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/urdf/markers/board_5.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_6">
+    <visual>
+      <origin xyz="${move} ${-2*move - board_edge} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/urdf/markers/board_6.dae"/>
+      </geometry>
+
+    </visual>
+  </link>
+
+  <link name="board_7">
+    <visual>
+      <origin xyz="${-move} ${-2*move - board_edge} ${base_z/2}" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://my_aruco/urdf/markers/board_7.dae"/>
       </geometry>
 
     </visual>
@@ -100,7 +170,7 @@
       <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
     </inertial>
   </link>
-  
+
 
   <!-- joint -->
 
@@ -111,9 +181,51 @@
     <origin xyz="0.0 0.0 ${link_z}" rpy="0 ${M_PI/2} 0"/>
   </joint>
 
-  <joint name="joint_base_board" type="fixed">
+  <joint name="joint_base_board_0" type="fixed">
     <parent link="base"/>
-    <child link="board"/>
+    <child link="board_0"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_1" type="fixed">
+    <parent link="base"/>
+    <child link="board_1"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_2" type="fixed">
+    <parent link="base"/>
+    <child link="board_2"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_3" type="fixed">
+    <parent link="base"/>
+    <child link="board_3"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_4" type="fixed">
+    <parent link="base"/>
+    <child link="board_4"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_5" type="fixed">
+    <parent link="base"/>
+    <child link="board_5"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_6" type="fixed">
+    <parent link="base"/>
+    <child link="board_6"/>
+    <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
+  </joint>
+
+  <joint name="joint_base_board_7" type="fixed">
+    <parent link="base"/>
+    <child link="board_7"/>
     <!-- <origin xyz="0.0 0.0 ${link_z}" rpy="0 0 0"/> -->
   </joint>
 

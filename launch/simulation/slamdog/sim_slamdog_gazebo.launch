@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="model" default="slamdog/slamdog.xacro"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="paused" default="false"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="false"/>
+    <arg name="headless" default="false"/>
+    <arg name="debug" default="false"/>
+  </include>
+
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find my_aruco)/urdf/$(arg model)'"/>
+
+  <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" required="true"/>
+  <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/> -->
+
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_model" respawn="false" output="screen" args="-urdf -model slamdog -param robot_description" />
+
+</launch>

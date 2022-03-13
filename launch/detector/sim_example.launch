@@ -4,4 +4,8 @@
         <param name="image_topic" value="/camera/image_raw"/>
         <param name="config_file" value="$(find my_aruco)/config/example.yaml"/>
     </node>
+
+    <node pkg="my_aruco" type="optim_node" name="optim_node" output="screen">
+        <param name="config_file" value="$(find my_aruco)/config/sim_slamdog.yaml"/>
+    </node>
 </launch>
