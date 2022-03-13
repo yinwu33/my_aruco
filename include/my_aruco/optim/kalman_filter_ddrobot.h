@@ -19,7 +19,7 @@ class KalmanFilterDDRobot {
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  KalmanFilterDDRobot() = delete;
+    KalmanFilterDDRobot() = delete;
   KalmanFilterDDRobot(ros::NodeHandle& nh, cv::FileNode& node);
 
   void LeftVelCallback(const std_msgs::Float64::ConstPtr& msg);
@@ -56,7 +56,8 @@ private:
    * v4: back left
    * v5=: back right
    */
-  double vl_, vr_;
+  double vl_ = 0.0;
+  double vr_ = 0.0;
   Eigen::Vector3d  vm_, vc1_, vc2_;
   double measurement_;
   bool measurementIsNew_ = false;

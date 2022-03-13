@@ -4,9 +4,9 @@ namespace my_aruco
 {
 static Eigen::Matrix3d Skew(Eigen::Vector3d v) {
   Eigen::Matrix3d m;
-  m << 0, -v[3], v[2],
-    v[3], 0, -v[1],
-    -v[2], v[1], 0;
+  m << 0, -v[2], v[1],
+    v[2], 0, -v[0],
+    -v[1], v[0], 0;
   return m;
 }
 
@@ -60,7 +60,6 @@ bool KalmanFilterDDRobot::Update() {
     if (!measurementIsNew_) {
       return false;
     }
-      // std::cout << "---------------------" << std::endl;
 
     // initialization: use first measurement as init state
     theta_last_ = theta_curr_ = measurement_;
@@ -75,12 +74,16 @@ bool KalmanFilterDDRobot::Update() {
     return false;
   }
 
-  if (vlIsNew_ == false or vrIsNew_ == false)
-    return false;
+  // if (vlIsNew_ == false or vrIsNew_ == false)
+  //   return false;
 
-  vlIsNew_ = false;
-  vrIsNew_ = false;
-
+  // vlIsNew_ = false;
+  // vrIsNew_ = false;
+  std::cout << "=======" << std::endl;
+  std::cout << theta_pred_ << std::endl;
+  std::cout << vl_ << " " <<  vr_ << std::endl;
+  std::cout << theta_last_ << std::endl;
+  std::cout << theta_curr_ << std::endl;
   Predict();
 
   P_ = A_ * P_ * A_ + Q_;
@@ -124,6 +127,10 @@ void KalmanFilterDDRobot::Publish() {
 }
 
 void KalmanFilterDDRobot::Predict() {
+  if (vl_ == 0 && vr_ == 0) {
+    theta_pred_ = theta_curr_;
+    return;
+  }
   if (vl_ == vr_ and theta_curr_ == 0) {
     vm_ << vl_, 0, 0;
     vc1_ << vl_, 0, 0;
@@ -138,6 +145,7 @@ void KalmanFilterDDRobot::Predict() {
   vc1_ << (vl_ + vr_) / 2, 0, 0;
 
   // the velocity of joint vm
+  // std::cout << "---------------------" << std::endl;
   vm_ = vc1_ + Skew(w1) * Eigen::Vector3d(-l1_, 0, 0);
 
   // the icp of the trailer

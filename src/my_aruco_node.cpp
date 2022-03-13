@@ -57,14 +57,15 @@ int main(int argc, char** argv) {
       continue;
 
     double yaw_mea = arucoDetector.getYaw();
-    ros::Time time = arucoDetector.getTime();
+    // ros::Time time = arucoDetector.getTime();
 
-    filter.Update(yaw_mea, time);
+    // filter.Update(yaw_mea, time);
 
-    double yaw_est = filter.getState();
+    // double yaw_est = filter.getState();
 
     // todo
     measurement.data = yaw_mea;
+    // std::cout << yaw_mea << std::endl;
     // measurement.point.x = yaw_mea;
     // measurement.point.y = yaw_mea * 180 / M_PI;
     // estimation.header.stamp = time;
@@ -73,6 +74,6 @@ int main(int argc, char** argv) {
     measurement_pub.publish(measurement);
     // estimation_pub.publish(estimation);
 
-    rate.sleep();
+    // rate.sleep();
   }
 }
