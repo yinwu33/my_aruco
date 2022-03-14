@@ -20,11 +20,14 @@ int main(int argc, char** argv) {
   bool doDebug = nh_private.param<bool>("doDebug", false); // todo
   std::string image_topic = nh_private.param<std::string>("image_topic", "image_raw");
   std::string config_file = nh_private.param<std::string>("config_file", "");
+  bool use_degree = nh.param<bool>("use_degree", false);
+
 
   // todo
   ros::Publisher measurement_pub = nh.advertise<std_msgs::Float64>("measurement", 100);
-  // ros::Publisher estimation_pub = nh.advertise<std_msgs::Float64>("estimation", 100);
+  ros::Publisher estimation_pub = nh.advertise<std_msgs::Float64>("estimation", 100);
   std_msgs::Float64 measurement;
+  std_msgs::Float64 estimation;
   // geometry_msgs::PointStamped estimation;
 
   // load configuration file
@@ -57,14 +60,22 @@ int main(int argc, char** argv) {
       continue;
 
     double yaw_mea = arucoDetector.getYaw();
-    // ros::Time time = arucoDetector.getTime();
 
-    // filter.Update(yaw_mea, time);
+    // ! constant velocity KF
+    ros::Time time = arucoDetector.getTime();
 
-    // double yaw_est = filter.getState();
+    filter.Update(yaw_mea, time);
+
+    double yaw_est = filter.getState();
 
     // todo
+    if (use_degree) {
+      yaw_mea = yaw_mea * 180 / M_PI;
+      yaw_est = yaw_est * 180 / M_PI;
+    }
+
     measurement.data = yaw_mea;
+    estimation.data = yaw_est;
     // std::cout << yaw_mea << std::endl;
     // measurement.point.x = yaw_mea;
     // measurement.point.y = yaw_mea * 180 / M_PI;
@@ -72,7 +83,7 @@ int main(int argc, char** argv) {
     // estimation.point.x = yaw_est;
     // estimation.point.y = yaw_est * 180 / M_PI;
     measurement_pub.publish(measurement);
-    // estimation_pub.publish(estimation);
+    estimation_pub.publish(estimation);
 
     // rate.sleep();
   }

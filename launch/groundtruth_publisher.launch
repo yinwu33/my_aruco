@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="tf" type="static_transform_publisher" name="camera_link7" args="0.102691 -0.033144 0.118066 -0.021098 -0.014248 0.926026 -0.376601 panda_link7 camera 100" required="true"/>
+
+  <node pkg="my_aruco" type="groundtruth_publisher_node" name="groundtruth_publisher_node" output="screen">
+    <param name="frame_id" value="panda_link0"/>
+    <param name="child_frame_id" value="panda_link7"/>
+    <!-- <param name="frame_id" value="base"/>
+    <param name="child_frame_id" value="tcp"/> -->
+  </node>
+</launch>

@@ -5,12 +5,13 @@ namespace my_aruco
 
 static Eigen::Quaterniond AddOffset(const Eigen::Quaterniond& input) {
   // Eigen::Matrix4d offsetMatrix = Eigen::Matrix4d::Identity();
-  Eigen::Matrix3d offsetMatrix = Eigen::AngleAxisd(M_PI, Eigen::Vector3d(1, 0, 0)).toRotationMatrix();
-  return Eigen::Quaterniond(input.matrix() * offsetMatrix);
+  return input;
+  // Eigen::Matrix3d offsetMatrix = Eigen::AngleAxisd(M_PI, Eigen::Vector3d(1, 0, 0)).toRotationMatrix();
+  // return Eigen::Quaterniond(input.matrix() * offsetMatrix);
 }
 
 static double calculateYaw(const Eigen::Quaterniond& q) {
-  Eigen::Vector3d vector = q.matrix() * Eigen::Vector3d(0, 0, 1);
+  Eigen::Vector3d vector = - q.matrix() * Eigen::Vector3d(0, 0, 1);
   return atan2(vector[0], vector[2]);
 }
 

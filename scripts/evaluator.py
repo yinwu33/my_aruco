@@ -1,4 +1,5 @@
 import os
+import math
 import argparse
 
 import numpy as np
@@ -33,11 +34,11 @@ def parseFile(path: str, filename: str):
     with open(os.path.join(path, filename), "r") as f:
         for line in f:
             text = line.split(" ")
-            assert len(text) == 3
+            assert len(text) == 2
 
             timestamp_list.append(float(text[0]))
             radian_list.append(float(text[1]))
-            degree_list.append(float(text[2]))
+            degree_list.append(float(text[1]) * 180 / math.pi)
 
     print(
         f"Finish reading {os.path.basename(path)} with {len(timestamp_list)} data")
@@ -49,9 +50,9 @@ def draw(root: str):
     e_t, e_r, e_d = parseFile(root, "estimation.txt")
     g_t, g_r, g_d = parseFile(root, "groundtruth.txt")
 
-    plt.plot(np.array(m_t), np.array(m_d), 'r', label="aruco")
-    plt.plot(np.array(e_t), np.array(e_d), 'g', label="filtered")
-    plt.plot(np.array(g_t), np.array(g_d), 'b', label="groundtruth")
+    plt.plot(np.array(m_t), np.array(m_r), 'r', label="aruco")
+    plt.plot(np.array(e_t), np.array(e_r), 'g', label="filtered")
+    plt.plot(np.array(g_t), np.array(g_r), 'b', label="groundtruth")
     plt.legend(loc="upper left")
     # plt.savefig(os.path.join(root, "draw.png"), dpi=800)
 
@@ -67,7 +68,7 @@ def draw(root: str):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--root", "-r", default="/home/ubuntu/Workspace/KIT/slamdog/aruco_ws/src/my_aruco/eval/test")
+        "--root", "-r", default="/home/ubuntu/Workspace/KIT/slamdog/my_aruco_ws/src/my_aruco/eval/test")
     args = parser.parse_args()
 
     draw(args.root)
