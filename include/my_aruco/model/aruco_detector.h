@@ -3,12 +3,14 @@
 
 #include <deque>
 #include <vector>
+#include <string>
 
 #include <opencv4/opencv2/opencv.hpp>
 #include <opencv4/opencv2/aruco.hpp>
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
+
 #include <ros/ros.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -23,17 +25,15 @@
 namespace my_aruco {
 class ArucoDetector {
 public:
-  ArucoDetector(std::shared_ptr<cv::FileStorage> fs, ImageSubscriber::Ptr pImageSub);
-
-  ArucoDetector(std::shared_ptr<cv::FileStorage> fs, ImageSubscriber::Ptr pImageSub, ros::NodeHandle& nh);
-
-  void Initialize();
+  ArucoDetector(cv::FileStorage& fs, ImageSubscriber::Ptr pImageSub, ros::NodeHandle& nh);
 
   bool Detect();
 
   bool PoseEstimate();
 
   void PosePublish();
+
+  void FilterOutlier();
 
   void ImagePublish();
 
@@ -44,6 +44,19 @@ public:
   ros::Time getTime() { return timestamp_; }
 
 private:
+  ros::NodeHandle nh_;
+  ros::Publisher pose_pub_;
+  ros::Publisher aruco_image_pub_;
+
+  ImageSubscriber::Ptr pImageSub_;
+
+  geometry_msgs::PoseArray poseArray_;
+
+  sensor_msgs::ImagePtr aruco_image_;
+  
+  cv::FileStorage fs_;
+
+  std::deque<ImageStamped::Ptr> dqBuffer_;
 
   std::vector<int> markerIds_;
   std::vector<std::vector<cv::Point2f>> markerCorners_, rejectedCandidates_;
@@ -55,41 +68,17 @@ private:
   // * instinsic parameters
   cv::Mat cameraMatrix_, distCoeffs_;
 
-  //
   cv::Mat image_;
 
   double markerSize_;
 
-  std::deque<ImageStamped::Ptr> dqBuffer_;
-
-  // image subscriber
-  // std::shared_ptr<ImageSubscriber> pImageSub_;
-  ImageSubscriber::Ptr pImageSub_;
-
-  // config file
-  std::shared_ptr<cv::FileStorage> fs_;
-
-  // ROS
-  bool bDoPublish_ = false;
-
-  ros::NodeHandle nh_;
-  ros::Publisher pose_pub_;
-  ros::Publisher aruco_image_pub_;
-
+  std::vector<Eigen::Quaterniond> qList_;
+  
+  double yaw_;
   std::vector<double> yawList_;
 
-  geometry_msgs::PoseArray poseArray_;
-  sensor_msgs::ImagePtr aruco_image_;
-  std::string frameId;
-
-  double yaw_;
-
-  bool has_result_ = false;
-
-  Eigen::Quaterniond q_;
-  std::vector<Eigen::Quaterniond> qList_;
-
   ros::Time timestamp_;
+  bool doPosePublish_ = false;
 };
 
 }

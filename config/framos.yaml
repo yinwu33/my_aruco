@@ -22,7 +22,7 @@ camera_frame_id: "camera"
 
 # ==================== marker informations ====================
 # marker informations
-marker_length: 0.079
+marker_length: 0.05 # ! todo
 
 # ==================== ros informations ====================
 do_publish: 0  # 0 for false 1 for true

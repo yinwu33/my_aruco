@@ -20,6 +20,7 @@ int main(int argc, char** argv) {
   bool doDebug = nh_private.param<bool>("doDebug", false); // todo
   std::string image_topic = nh_private.param<std::string>("image_topic", "image_raw");
   std::string config_file = nh_private.param<std::string>("config_file", "");
+  int fps = nh_private.param<int>("fps", 30);
   bool use_degree = nh.param<bool>("use_degree", false);
 
 
@@ -36,9 +37,9 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  std::shared_ptr<cv::FileStorage> fs = std::make_shared<cv::FileStorage>();
+  cv::FileStorage fs = cv::FileStorage();
 
-  if (!fs->open(config_file, cv::FileStorage::READ)) {
+  if (!fs.open(config_file, cv::FileStorage::READ)) {
     std::cerr << "Config File " << config_file << " doesn't exist, Please check your file path" << std::endl;
     return EXIT_FAILURE;
   }
@@ -48,9 +49,8 @@ int main(int argc, char** argv) {
   ArucoDetector arucoDetector(fs, pImageSub, nh);
   KalmanFilter filter(1, 1, 1); // todo use config file with cv::File
 
-  std::deque<std::shared_ptr<cv::Mat>> dq_buffer;  // ! to be deleted
 
-  ros::Rate rate(200);
+  ros::Rate rate(fps); // to be deleted
 
   // run
   while (ros::ok()) {
@@ -68,7 +68,6 @@ int main(int argc, char** argv) {
 
     double yaw_est = filter.getState();
 
-    // todo
     if (use_degree) {
       yaw_mea = yaw_mea * 180 / M_PI;
       yaw_est = yaw_est * 180 / M_PI;
@@ -76,15 +75,8 @@ int main(int argc, char** argv) {
 
     measurement.data = yaw_mea;
     estimation.data = yaw_est;
-    // std::cout << yaw_mea << std::endl;
-    // measurement.point.x = yaw_mea;
-    // measurement.point.y = yaw_mea * 180 / M_PI;
-    // estimation.header.stamp = time;
-    // estimation.point.x = yaw_est;
-    // estimation.point.y = yaw_est * 180 / M_PI;
+
     measurement_pub.publish(measurement);
     estimation_pub.publish(estimation);
-
-    // rate.sleep();
   }
 }

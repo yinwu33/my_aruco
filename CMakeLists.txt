@@ -194,6 +194,8 @@ Eigen3::Eigen)
 catkin_install_python(PROGRAMS
   scripts/slamdog_controller_node.py
   scripts/robot_controller_node.py
+  scripts/evaluator.py
+  scripts/recorder.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

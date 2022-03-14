@@ -3,15 +3,12 @@
 namespace my_aruco
 {
 
-static Eigen::Quaterniond AddOffset(const Eigen::Quaterniond& input) {
-  // Eigen::Matrix4d offsetMatrix = Eigen::Matrix4d::Identity();
-  return input;
-  // Eigen::Matrix3d offsetMatrix = Eigen::AngleAxisd(M_PI, Eigen::Vector3d(1, 0, 0)).toRotationMatrix();
-  // return Eigen::Quaterniond(input.matrix() * offsetMatrix);
-}
+// static Eigen::Quaterniond AddOffset(const Eigen::Quaterniond& input) {
+//   return input;
+// }
 
 static double calculateYaw(const Eigen::Quaterniond& q) {
-  Eigen::Vector3d vector = - q.matrix() * Eigen::Vector3d(0, 0, 1);
+  Eigen::Vector3d vector = -q.matrix() * Eigen::Vector3d(0, 0, 1);
   return atan2(vector[0], vector[2]);
 }
 
@@ -28,32 +25,30 @@ static Eigen::Quaterniond GetQuaternion(cv::Vec3d aa) {
   return Eigen::Quaterniond(cos(angle_2), aa(0) / angle * sin(angle_2), aa(1) / angle * sin(angle_2), aa(2) / angle * sin(angle_2));
 }
 
-ArucoDetector::ArucoDetector(std::shared_ptr<cv::FileStorage> fs, ImageSubscriber::Ptr pImageSub)
-  : fs_(fs), pImageSub_(pImageSub) {
-  Initialize();
-}
 
-ArucoDetector::ArucoDetector(std::shared_ptr<cv::FileStorage> fs, ImageSubscriber::Ptr pImageSub, ros::NodeHandle& nh)
-  : fs_(fs), pImageSub_(pImageSub), nh_(nh), bDoPublish_(true) {
-  Initialize();
+ArucoDetector::ArucoDetector(cv::FileStorage& fs, ImageSubscriber::Ptr pImageSub, ros::NodeHandle& nh)
+  : fs_(fs), pImageSub_(pImageSub), nh_(nh) {
+  // ROS Publisher Initialization
+  aruco_image_pub_ = nh_.advertise<sensor_msgs::Image>((std::string)fs_["topic_name_aruco_image"], 100);
 
-  // ROS Initialization
-  pose_pub_ = nh_.advertise<geometry_msgs::PoseArray>((std::string)(*fs_)["topic_name_marker_poses"], 100);
-  aruco_image_pub_ = nh_.advertise<sensor_msgs::Image>((std::string)(*fs_)["topic_name_aruco_image"], 100);
-  poseArray_.header.frame_id = (std::string)(*fs_)["camera_frame_id"];
-}
-
-void ArucoDetector::Initialize() {
   // camera parameters initialize
-  (*fs_)["K"] >> cameraMatrix_;
-  (*fs_)["D"] >> distCoeffs_;
+  fs_["K"] >> cameraMatrix_;
+  fs_["D"] >> distCoeffs_;
 
   // aruco markers initialize
-  markerSize_ = (double)(*fs_)["marker_length"];
+  markerSize_ = (double)fs_["marker_length"]; // todo use right marker size
+  ROS_INFO("marker size: %f", markerSize_);
 
   // opencv aruco initialize
   parameters_ = cv::aruco::DetectorParameters::create();
   dictionary_ = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
+
+  if (doPosePublish_) {
+    ROS_INFO("PoseArray will be published");
+    pose_pub_ = nh_.advertise<geometry_msgs::PoseArray>((std::string)fs_["topic_name_marker_poses"], 100);
+    poseArray_.header.frame_id = (std::string)fs_["camera_frame_id"];
+  }
+
 }
 
 
@@ -77,19 +72,42 @@ bool ArucoDetector::PoseEstimate() {
 
   cv::aruco::estimatePoseSingleMarkers(markerCorners_, markerSize_, cameraMatrix_, distCoeffs_, rvecs_, tvecs_);
 
-  double yawSum = 0.0;
+  yawList_.clear();
   qList_.clear();
   for (size_t i = 0; i < rvecs_.size(); ++i) {
-    Eigen::Quaterniond q = AddOffset(GetQuaternion(rvecs_[i]));
+    Eigen::Quaterniond q = GetQuaternion(rvecs_[i]);
 
     qList_.emplace_back(q);
 
-    yawSum += calculateYaw(q);
+    yawList_.emplace_back(calculateYaw(q));
   }
 
-  yaw_ = yawSum / rvecs_.size();
+  FilterOutlier();
 
   return true;
+}
+
+void ArucoDetector::FilterOutlier() {
+  if (yawList_.size() >= 4) {
+    // remove the largest and the smallest measurement
+    // todo: maybe more reasonalbe technology
+    std::sort(yawList_.begin(), yawList_.end());
+    double sum = 0.0;
+    for (size_t i = 0; i < yawList_.size(); ++i) {
+      if (i == 0 or i == yawList_.size() - 1)
+        continue;
+
+      sum += yawList_[i];
+    }
+    yaw_ = sum / (yawList_.size() - 2);
+  }
+  else {
+    double sum = 0.0;
+    for (const auto& y : yawList_) {
+      sum += y;
+    }
+    yaw_ = sum / yawList_.size();
+  }
 }
 
 void ArucoDetector::PosePublish() {
@@ -97,7 +115,7 @@ void ArucoDetector::PosePublish() {
   poseArray_.poses.clear();
   for (size_t i = 0; i < qList_.size(); ++i) {
     geometry_msgs::Pose pose;
-    poseArray_.header.stamp = ros::Time::now(); // todo, use same timestamp as image
+    poseArray_.header.stamp = timestamp_;
 
     // GetQuaternion(rvecs_[i], q);
     Eigen::Quaterniond q = qList_[i];
@@ -123,7 +141,6 @@ void ArucoDetector::ImagePublish() {
   }
   aruco_image_ = cv_bridge::CvImage(std_msgs::Header(), "bgr8", image_).toImageMsg();
   aruco_image_pub_.publish(*aruco_image_);
-
 }
 
 
@@ -140,7 +157,7 @@ bool ArucoDetector::Run() {
 
   ImagePublish();
 
-  if (bDoPublish_)
+  if (doPosePublish_)
     PosePublish();
 
   return true;

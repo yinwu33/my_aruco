@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <launch>
+<!-- todo -->
     <node pkg="my_aruco" type="my_aruco_node" name="my_aruco_node" output="screen" required="true">
         <param name="image_topic" value="/camera/image_raw"/>
         <param name="config_file" value="$(find my_aruco)/config/example.yaml"/>

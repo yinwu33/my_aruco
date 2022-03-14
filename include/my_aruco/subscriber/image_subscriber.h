@@ -24,7 +24,7 @@ public:
 
   void MsgCallback(const sensor_msgs::ImageConstPtr& msg);
 
-  void ParseData(std::deque<ImageStamped::Ptr>& dq_buffer);
+  void ParseData(std::deque<ImageStamped::Ptr>& buffer);
 
 private:
   ros::NodeHandle nh_;

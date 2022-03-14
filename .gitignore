@@ -3,3 +3,11 @@
 *.db-wal
 .vscode/settings.json
 .vscode/c_cpp_properties.json
+
+
+*.bag
+build/
+devel/
+eval/test
+eval/test/
+test/

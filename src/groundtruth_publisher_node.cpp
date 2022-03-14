@@ -7,30 +7,25 @@
 
 #include <Eigen/Dense>
 
-static Eigen::Quaterniond AddOffset(const Eigen::Quaterniond& input) {
-  // Eigen::Matrix3d offsetMatrix = Eigen::AngleAxisd(M_PI, Eigen::Vector3d(1, 0, 0)).toRotationMatrix(); // real
-  // Eigen::Matrix3d offsetMatrix = Eigen::AngleAxisd(-M_PI/2, Eigen::Vector3d(0, 1, 0)).toRotationMatrix(); // sim
-  // return Eigen::Quaterniond(input.matrix() * offsetMatrix);
-
-  return input;
-}
+// ! to be deleted
+// static Eigen::Quaterniond AddOffset(const Eigen::Quaterniond& input) {
+//   return input;
+// }
 
 static double calculateYaw(const Eigen::Quaterniond& q) {
-  // Eigen::Vector3d ori(0, 0, 1);
-  Eigen::Vector3d vector = - q.matrix() * Eigen::Vector3d(0, 0, 1); // real
-  // Eigen::Vector3d vector = q.matrix() * Eigen::Vector3d(0, 1, 0); // sim
-  // std::cout << vector.transpose() << std::endl;
-  return atan2(vector[1], vector[2]); // real
-  // return atan2(vector[2], vector[1]); // simulation
+  // base on franka robot
+  Eigen::Vector3d vector = -q.matrix() * Eigen::Vector3d(0, 0, 1);
+  return atan2(vector[1], vector[2]);
 }
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "gt_pose_node");
+  ros::init(argc, argv, "groundtruth_publisher_node");
   ros::NodeHandle nh, nh_private("~");
   ros::Publisher gt_pub = nh.advertise<std_msgs::Float64>("groundtruth", 100);
 
   std::string frame_id = nh_private.param<std::string>("frame_id", "panda_link0");
-  std::string child_frame_id = nh_private.param<std::string>("child_frame_id", "panda_link7");
+  std::string child_frame_id = nh_private.param<std::string>("child_frame_id", "camera");
+  int fps = nh_private.param<int>("fps", 30);
   bool use_degree = nh.param<bool>("use_degree", false);
 
   // logging
@@ -42,7 +37,7 @@ int main(int argc, char** argv) {
 
   tf::StampedTransform transform;
 
-  ros::Rate rate(30);
+  ros::Rate rate(fps);
 
   while (ros::ok()) {
     ros::Time now = ros::Time();
@@ -51,21 +46,20 @@ int main(int argc, char** argv) {
     }
     catch (tf::TransformException& ex) {
       ROS_ERROR("%s", ex.what());
-      ros::Duration(0.5).sleep();
+      ros::Duration(0.1).sleep();
       continue;
     }
-      tf::Quaternion q = transform.getRotation();
-      Eigen::Quaterniond rotationMatrix = AddOffset(Eigen::Quaterniond(q.w(), q.x(), q.y(), q.z()));
-      double yaw = calculateYaw(rotationMatrix);
 
-      if (use_degree)
-        yaw = yaw * 180 / M_PI;
+    tf::Quaternion q = transform.getRotation();
+    double yaw = calculateYaw(Eigen::Quaterniond(q.w(), q.x(), q.y(), q.z()));
 
-      groundtruth.data = yaw;
-      gt_pub.publish(groundtruth);
+    if (use_degree)
+      yaw = yaw * 180 / M_PI;
 
-      // std::cout << rotationMatrix.matrix() << std::endl;
-      rate.sleep();
+    groundtruth.data = yaw;
+    gt_pub.publish(groundtruth);
+
+    rate.sleep();
   }
 
   return EXIT_SUCCESS;
