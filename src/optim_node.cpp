@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 
   ros::NodeHandle nh, nh_private("~");
 
-  std::string configFile = nh_private.param<std::string>("config_file", "");
+  std::string configFile = nh_private.param<std::string>("config_file", "/home/ubuntu/Workspace/KIT/slamdog/my_aruco_ws/src/my_aruco/config/sim_slamdog.yaml");
   if (configFile == "") {
     std::cerr << "must speicifca config file path";
     return EXIT_FAILURE;
@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 
   cv::FileNode node = fs["kalman_filter_ddrobot"];
 
-  ros::Rate rate(200);
+  ros::Rate rate(30); // ! debug
 
   KalmanFilterDDRobot optim(nh, node);
 

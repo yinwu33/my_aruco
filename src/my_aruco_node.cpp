@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
   std::string image_topic = nh_private.param<std::string>("image_topic", "image_raw");
   std::string config_file = nh_private.param<std::string>("config_file", "");
   int fps = nh_private.param<int>("fps", 30);
-  bool use_degree = nh.param<bool>("use_degree", false);
+  // bool use_degree = nh.param<bool>("use_degree", false); // ! to be deleted
 
 
   // todo
@@ -68,10 +68,10 @@ int main(int argc, char** argv) {
 
     double yaw_est = filter.getState();
 
-    if (use_degree) {
-      yaw_mea = yaw_mea * 180 / M_PI;
-      yaw_est = yaw_est * 180 / M_PI;
-    }
+    // if (use_degree) { // ! to be deleted
+    //   yaw_mea = yaw_mea * 180 / M_PI;
+    //   yaw_est = yaw_est * 180 / M_PI;
+    // }
 
     measurement.data = yaw_mea;
     estimation.data = yaw_est;

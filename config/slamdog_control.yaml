@@ -12,3 +12,7 @@ slamdog:
       type: velocity_controllers/JointVelocityController
       joint: joint_right_wheel
       # pid: {p: 100.0, i: 0.01, d: 10.0}
+  joint_trailer_publihser:
+      type: effort_controllers/JointPositionController
+      joint: joint_trailer
+      # pid: {p: 100.0, i: 0.01, d: 10.0}

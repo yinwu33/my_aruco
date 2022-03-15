@@ -14,4 +14,6 @@ kalman_filter_ddrobot:
   b1: 0.8
   b2: 0.8
   l1: 0.35
-  l2: 1.5
+  l2: 1.0
+
+  radius: 0.3

@@ -1,4 +1,3 @@
-from xml.etree.ElementTree import PI
 import rospy
 from std_msgs.msg import Float64
 

@@ -14,17 +14,17 @@
 
 static double calculateYaw(const Eigen::Quaterniond& q) {
   // base on franka robot
-  Eigen::Vector3d vector = -q.matrix() * Eigen::Vector3d(0, 0, 1);
-  return atan2(vector[1], vector[2]);
+  Eigen::Vector3d vector = q.matrix() * Eigen::Vector3d(1, 0, 0);
+  return - atan2(vector[1], vector[0]);
 }
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "groundtruth_publisher_node");
+  ros::init(argc, argv, "sim_groundtruth_publisher_node");
   ros::NodeHandle nh, nh_private("~");
   ros::Publisher gt_pub = nh.advertise<std_msgs::Float64>("groundtruth", 100);
 
-  std::string frame_id = nh_private.param<std::string>("frame_id", "panda_link0");
-  std::string child_frame_id = nh_private.param<std::string>("child_frame_id", "camera");
+  std::string frame_id = nh_private.param<std::string>("frame_id", "link_base");
+  std::string child_frame_id = nh_private.param<std::string>("child_frame_id", "link_trailer");
   int fps = nh_private.param<int>("fps", 30);
   // bool use_degree = nh.param<bool>("use_degree", false); // ! to be deleted
 

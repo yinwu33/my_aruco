@@ -26,6 +26,8 @@ KalmanFilterDDRobot::KalmanFilterDDRobot(ros::NodeHandle& nh, cv::FileNode& node
   predictPub_ = nh_.advertise<std_msgs::Float64>(predictionTopic, 100);
   estimationPub_ = nh_.advertise<std_msgs::Float64>(estimationTopic, 100);
 
+  radius_ = (double)node["radius"];
+
   // init covariance matrix
   P0_ = (double)node["P0"];
   Q_ = (double)node["Q"];
@@ -39,17 +41,20 @@ KalmanFilterDDRobot::KalmanFilterDDRobot(ros::NodeHandle& nh, cv::FileNode& node
 }
 
 void KalmanFilterDDRobot::LeftVelCallback(const std_msgs::Float64::ConstPtr& msg) {
-  vl_ = msg->data;
+  vl_ = msg->data * radius_;
+  // std::cout << "get vl" << std::endl;
   vlIsNew_ = true;
 }
 
 void KalmanFilterDDRobot::RightVelCallback(const std_msgs::Float64::ConstPtr& msg) {
-  vr_ = msg->data;
+  vr_ = msg->data * radius_;
+  // std::cout << "get vr" << std::endl;
   vrIsNew_ = true;
 }
 
 void KalmanFilterDDRobot::MeasurenmentCallback(const std_msgs::Float64::ConstPtr& msg) {
   measurement_ = msg->data;
+  // std::cout << "get measurement" << std::endl;
   measurementIsNew_ = true;
 }
 
@@ -63,6 +68,7 @@ bool KalmanFilterDDRobot::Update() {
 
     // initialization: use first measurement as init state
     theta_last_ = theta_curr_ = measurement_;
+    // theta_last_ = theta_curr_ = 0.0; // ! test
     t_last_ = t_curr_ = ros::Time::now(); // ???
 
     P_ = P0_;
@@ -79,16 +85,25 @@ bool KalmanFilterDDRobot::Update() {
 
   // vlIsNew_ = false;
   // vrIsNew_ = false;
-  std::cout << "=======" << std::endl;
-  std::cout << theta_pred_ << std::endl;
-  std::cout << vl_ << " " <<  vr_ << std::endl;
-  std::cout << theta_last_ << std::endl;
-  std::cout << theta_curr_ << std::endl;
+  // std::cout << "\n=======" << std::endl;
+  // std::cout << "vl: " << vl_ << " vr: " <<  vr_ << std::endl;
+  // std::cout << "last: " << theta_last_ << std::endl;
+  // std::cout << "curr: " << theta_curr_ << std::endl;
+
   Predict();
+  // std::cout << "prediction: " << theta_pred_ << std::endl;
+
+  // ! why
+
 
   P_ = A_ * P_ * A_ + Q_;
 
   if (measurementIsNew_) {
+    if (std::isnan(theta_pred_)) {
+      ROS_WARN("Lost!");
+      theta_pred_ = measurement_;
+    }
+  // if (false) { // ! test
     K_ = P_ * C_ / (C_ * P_ * C_ + R_);
     P_ = (1 - K_ * C_) * P_;
 
@@ -136,6 +151,7 @@ void KalmanFilterDDRobot::Predict() {
     vc1_ << vl_, 0, 0;
     vc2_ << vl_, 0, 0;
     theta_pred_ = 0.0;
+    return;
   }
 
   // the angular velocity of the slamdog
@@ -173,6 +189,10 @@ void KalmanFilterDDRobot::Predict() {
 
   double radian = acos(m_c1.dot(c2_m) / (m_c1.norm() * c2_m.norm()));
 
+  if ((m_c1[0] * c2_m[1] - m_c1[1] * c2_m[0]) < 0) {
+    radian = -radian;
+  }
+
   // normiliza to -pi ~ pi
   while (radian < -M_PI) {
     radian = radian + 2 * M_PI;
@@ -182,7 +202,7 @@ void KalmanFilterDDRobot::Predict() {
     radian = radian - 2 * M_PI;
   }
 
-  theta_pred_ = radian;
+  theta_pred_ = -radian; // ? don't know why, depends on definition
 }
 
 }  // namespace my_aruco

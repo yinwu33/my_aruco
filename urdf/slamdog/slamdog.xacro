@@ -8,9 +8,10 @@
     <xacro:property name="z_length" value="0.4"/>
     <xacro:property name="wheel_length" value="0.1"/>
     <xacro:property name="wheel_radius" value="0.3"/>
-    <xacro:property name="distance" value="1.5"/>
+    <xacro:property name="distance" value="1.0"/>
     <xacro:property name="link_width" value="0.05"/>
-    <xacro:property name="move" value="0.3"/>
+    <xacro:property name="move_y" value="0.3"/>
+    <xacro:property name="move_z" value="0.1"/>
     <xacro:property name="installation_position" value="-${x_length/2 + 0.05}"/>
 
 
@@ -232,6 +233,27 @@
         </visual>
     </link>
 
+    <!-- board -->
+    <link name="board_2">
+        <visual>
+            <origin xyz="0.0 0.0 0.0}" rpy="0.0 ${M_PI/2} 0.0"/>
+            <geometry>
+                <mesh filename="package://my_aruco/urdf/markers/board_2.dae"/>
+            </geometry>
+
+        </visual>
+    </link>
+
+    <link name="board_3">
+        <visual>
+            <origin xyz="0.0 0.0 0.0}" rpy="0.0 ${M_PI/2} 0.0"/>
+            <geometry>
+                <mesh filename="package://my_aruco/urdf/markers/board_3.dae"/>
+            </geometry>
+
+        </visual>
+    </link>
+
     <!-- camera -->
 
     <link name="link_camera">
@@ -282,16 +304,30 @@
     </joint>
 
     <joint name="fix_board_0" type="fixed">
-        <origin xyz="${-distance+x_length/2} ${move} 0.0" rpy="0.0 0.0 0.0"/>
+        <origin xyz="${-distance+x_length/2} ${move_y} -${z_length/2 - move_z}" rpy="0.0 0.0 0.0"/>
         <parent link="link_trailer"/>
         <child link="board_0"/>
         <!-- <axis xyz="0.0 0.0 1.0"/> -->
     </joint>
 
     <joint name="fix_board_1" type="fixed">
-        <origin xyz="${-distance+x_length/2} ${-move} 0.0" rpy="0.0 0.0 0.0"/>
+        <origin xyz="${-distance+x_length/2} ${-move_y} -${z_length/2 - move_z}" rpy="0.0 0.0 0.0"/>
         <parent link="link_trailer"/>
         <child link="board_1"/>
+        <!-- <axis xyz="0.0 0.0 1.0"/> -->
+    </joint>
+
+    <joint name="fix_board_2" type="fixed">
+        <origin xyz="${-distance+x_length/2} ${move_y} ${z_length/2 - move_z}" rpy="0.0 0.0 0.0"/>
+        <parent link="link_trailer"/>
+        <child link="board_2"/>
+        <!-- <axis xyz="0.0 0.0 1.0"/> -->
+    </joint>
+
+    <joint name="fix_board_3" type="fixed">
+        <origin xyz="${-distance+x_length/2} ${-move_y} ${z_length/2 - move_z}" rpy="0.0 0.0 0.0"/>
+        <parent link="link_trailer"/>
+        <child link="board_3"/>
         <!-- <axis xyz="0.0 0.0 1.0"/> -->
     </joint>
 
@@ -349,6 +385,17 @@
         </joint>
         <actuator name="motor_right_wheel">
             <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="trans_trailer_joint">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="joint_trailer">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor_trailer">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             <mechanicalReduction>1</mechanicalReduction>
         </actuator>
     </transmission>

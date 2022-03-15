@@ -6,7 +6,11 @@
         <param name="config_file" value="$(find my_aruco)/config/example.yaml"/>
     </node>
 
-    <node pkg="my_aruco" type="optim_node" name="optim_node" output="screen">
-        <param name="config_file" value="$(find my_aruco)/config/sim_slamdog.yaml"/>
+    <node pkg="my_aruco" type="sim_groundtruth_publisher_node" name="sim_groundtruth_publisher_node">
+        
     </node>
+
+    <!-- <node pkg="my_aruco" type="optim_node" name="optim_node" output="screen">
+        <param name="config_file" value="$(find my_aruco)/config/sim_slamdog.yaml"/>
+    </node> -->
 </launch>

@@ -149,6 +149,7 @@ add_executable(image_publisher_node src/image_publisher_node.cpp
 )
 
 add_executable(groundtruth_publisher_node src/groundtruth_publisher_node.cpp)
+add_executable(sim_groundtruth_publisher_node src/sim_groundtruth_publisher_node.cpp)
 
 add_executable(optim_node src/optim_node.cpp
                           src/optim/kalman_filter_ddrobot.cpp)
@@ -178,6 +179,11 @@ ${catkin_LIBRARIES}
 Eigen3::Eigen
 )
 
+target_link_libraries(sim_groundtruth_publisher_node
+${catkin_LIBRARIES}
+Eigen3::Eigen
+)
+
 target_link_libraries(optim_node
 ${catkin_LIBRARIES}
 Eigen3::Eigen)
@@ -192,8 +198,8 @@ Eigen3::Eigen)
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
-  scripts/slamdog_controller_node.py
-  scripts/robot_controller_node.py
+  scripts/simulation/slamdog_controller_node.py
+  scripts/simulation/robot_controller_node.py
   scripts/evaluator.py
   scripts/recorder.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

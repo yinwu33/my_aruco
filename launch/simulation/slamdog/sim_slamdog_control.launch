@@ -5,7 +5,7 @@
   <!-- load the controllers -->
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
 	output="screen" ns="/slamdog" args="joint_state_controller
-					  joint_left_controller joint_right_controller"/>
+					  joint_left_controller joint_right_controller joint_trailer_publisher"/>
 
   <!-- convert joint states to TF transforms for rviz, etc -->  
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"

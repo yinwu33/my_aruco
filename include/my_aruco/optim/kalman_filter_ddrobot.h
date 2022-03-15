@@ -56,6 +56,7 @@ private:
    * v4: back left
    * v5=: back right
    */
+  double radius_;
   double vl_ = 0.0;
   double vr_ = 0.0;
   Eigen::Vector3d  vm_, vc1_, vc2_;
