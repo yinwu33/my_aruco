@@ -8,6 +8,7 @@ from datetime import datetime
 import rospy
 from geometry_msgs.msg import PointStamped
 from std_msgs.msg import Float64
+from my_aruco.msg import AngleStamped
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -18,35 +19,21 @@ topic_groundtruth = "groundtruth"
 
 class Evaluator():
     def __init__(self, root: str, draw: bool = False):
-        self.measurement_sub = rospy.Subscriber(topic_measurement, Float64, callback=self.measurementCallback)
-        self.estimation_sub = rospy.Subscriber(topic_estimation, Float64, callback=self.estimationCallback)
-        self.gt_sub = rospy.Subscriber(topic_groundtruth, Float64, callback=self.gtCallback)
-        
-        # self.measurement_list = {"timestamp": [], "radian": [], "degree": []}
-        # self.estimation_list = {"timestamp": [], "radian": [], "degree": []}
-        # self.gt_list = {"timestamp": [], "radian": [], "degree": []}
-        
+        self.measurement_sub = rospy.Subscriber(topic_measurement, AngleStamped, callback=self.measurementCallback)
+        self.estimation_sub = rospy.Subscriber(topic_estimation, AngleStamped, callback=self.estimationCallback)
+        self.gt_sub = rospy.Subscriber(topic_groundtruth, AngleStamped, callback=self.gtCallback)        
 
     def measurementCallback(self, msg):
-        # self.measurement_list.append(msg)
         text = self.parseData(msg)
-        # self.measurement_list["timestamp"].append(rospy.Time.now())
-        # self.measurement_list["timestamp"].append(time)
-        # self.measurement_list["radian"].append(radian)
         self.fs_measurement.write(text)
 
     def estimationCallback(self, msg):
         text = self.parseData(msg)
-        # self.estimation_list["timestamp"].append(rospy.Time.now())
-        # self.estimation_list["timestamp"].append(time)
-        # self.estimation_list["radian"].append(radian)
         self.fs_estimation.write(text)
 
     def gtCallback(self, msg):
         text = self.parseData(msg)
-        # self.gt_list["timestamp"].append(rospy.Time.now())
-        # self.gt_list["timestamp"].append(time)
-        # self.gt_list["radian"].append(radian)
+
         self.fs_groundtruth.write(text)
         
     def __enter__(self):
@@ -60,10 +47,9 @@ class Evaluator():
         self.fs_groundtruth.close()
         
     @staticmethod
-    def parseData(msg: Float64()):
-        time = rospy.Time.now().to_sec()
-        # time = msg.header.stamp.to_sec()
-        angle = msg.data
+    def parseData(msg: AngleStamped):
+        time = msg.header.stamp.to_sec()
+        angle = msg.angle
         
         text = f"{time} {angle}\n"
         return text

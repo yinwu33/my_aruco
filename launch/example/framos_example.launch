@@ -4,4 +4,7 @@
     <param name="config_file" value="$(find my_aruco)/config/framos.yaml"/>
     <param name="image_topic" value="/camera/color/image_raw"/>
   </node>
+
+  <include file="$(find my_aruco)/launch/others/groundtruth_publisher.launch" />
+
 </launch>

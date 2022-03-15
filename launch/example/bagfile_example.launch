@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="bagfile_path" default="/home/ubuntu/Workspace/KIT/slamdog/bagfiles/8_good.bag"/>
+  <arg name="bagfile_path" default="/home/ubuntu/Workspace/KIT/slamdog/bagfiles/1_test.bag"/>
   <arg name="image_topic" default="/camera/color/image_raw"/>
   <arg name="config_file" default="framos.yaml"/>
   <arg name="use_degree" default="false"/>

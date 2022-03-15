@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
 <launch>
-<!-- todo -->
+    <!-- todo -->
     <node pkg="my_aruco" type="my_aruco_node" name="my_aruco_node" output="screen" required="true">
         <param name="image_topic" value="/camera/image_raw"/>
         <param name="config_file" value="$(find my_aruco)/config/example.yaml"/>
     </node>
 
     <node pkg="my_aruco" type="sim_groundtruth_publisher_node" name="sim_groundtruth_publisher_node">
-        
+        <param name="frame_id" value="base"/>
+        <param name="child_frame_id" value="tcp"/>
+
     </node>
 
     <!-- <node pkg="my_aruco" type="optim_node" name="optim_node" output="screen">

@@ -40,6 +40,8 @@ KalmanFilterDDRobot::KalmanFilterDDRobot(ros::NodeHandle& nh, cv::FileNode& node
   l2_ = (double)node["l2"];
 }
 
+// todo change msg
+
 void KalmanFilterDDRobot::LeftVelCallback(const std_msgs::Float64::ConstPtr& msg) {
   vl_ = msg->data * radius_;
   // std::cout << "get vl" << std::endl;

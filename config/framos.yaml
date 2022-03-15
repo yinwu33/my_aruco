@@ -24,6 +24,11 @@ camera_frame_id: "camera"
 # marker informations
 marker_length: 0.05 # ! todo
 
+# 1. 0.152
+# 2. 0.101
+# 4. 0.079
+# 8. 0.051
+
 # ==================== ros informations ====================
 do_publish: 0  # 0 for false 1 for true
 topic_name_marker_poses: "marker_poses"

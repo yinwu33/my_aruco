@@ -6,6 +6,8 @@
 #include "my_aruco/model/aruco_detector.h"
 #include "my_aruco/optim/kalman_filter.h"
 
+#include "my_aruco/AngleStamped.h"
+
 #include <geometry_msgs/PointStamped.h>
 #include <std_msgs/Float64.h>
 
@@ -25,10 +27,10 @@ int main(int argc, char** argv) {
 
 
   // todo
-  ros::Publisher measurement_pub = nh.advertise<std_msgs::Float64>("measurement", 100);
-  ros::Publisher estimation_pub = nh.advertise<std_msgs::Float64>("estimation", 100);
-  std_msgs::Float64 measurement;
-  std_msgs::Float64 estimation;
+  ros::Publisher measurement_pub = nh.advertise<AngleStamped>("measurement", 100);
+  ros::Publisher estimation_pub = nh.advertise<AngleStamped>("estimation", 100);
+  AngleStamped measurement;
+  AngleStamped estimation;
   // geometry_msgs::PointStamped estimation;
 
   // load configuration file
@@ -68,13 +70,12 @@ int main(int argc, char** argv) {
 
     double yaw_est = filter.getState();
 
-    // if (use_degree) { // ! to be deleted
-    //   yaw_mea = yaw_mea * 180 / M_PI;
-    //   yaw_est = yaw_est * 180 / M_PI;
-    // }
-
-    measurement.data = yaw_mea;
-    estimation.data = yaw_est;
+    measurement.header.stamp = time;
+    measurement.radian = yaw_mea;
+    measurement.degree = yaw_mea * 180 / M_PI;
+    estimation.header.stamp = time;
+    estimation.radian = yaw_est;
+    estimation.degree = yaw_est * 180 / M_PI;
 
     measurement_pub.publish(measurement);
     estimation_pub.publish(estimation);

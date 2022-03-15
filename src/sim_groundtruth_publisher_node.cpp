@@ -3,6 +3,8 @@
 #include <geometry_msgs/PointStamped.h>
 #include <std_msgs/Float64.h>
 
+#include "my_aruco/AngleStamped.h"
+
 #include <string>
 
 #include <Eigen/Dense>
@@ -21,7 +23,7 @@ static double calculateYaw(const Eigen::Quaterniond& q) {
 int main(int argc, char** argv) {
   ros::init(argc, argv, "sim_groundtruth_publisher_node");
   ros::NodeHandle nh, nh_private("~");
-  ros::Publisher gt_pub = nh.advertise<std_msgs::Float64>("groundtruth", 100);
+  ros::Publisher gt_pub = nh.advertise<my_aruco::AngleStamped>("groundtruth", 100);
 
   std::string frame_id = nh_private.param<std::string>("frame_id", "link_base");
   std::string child_frame_id = nh_private.param<std::string>("child_frame_id", "link_trailer");
@@ -33,7 +35,7 @@ int main(int argc, char** argv) {
 
   tf::TransformListener listener;
 
-  std_msgs::Float64 groundtruth;
+  my_aruco::AngleStamped groundtruth;
 
   tf::StampedTransform transform;
 
@@ -55,8 +57,9 @@ int main(int argc, char** argv) {
 
     // if (use_degree) // ! to be deleted
     //   yaw = yaw * 180 / M_PI;
-
-    groundtruth.data = yaw;
+    groundtruth.header.stamp = transform.stamp_;
+    groundtruth.radian = yaw;
+    groundtruth.degree = yaw * 180 / M_PI;
     gt_pub.publish(groundtruth);
 
     rate.sleep();
