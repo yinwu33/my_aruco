@@ -6,6 +6,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 SHOW_DEGREE = True
+OFFSET = 0
 
 def calculateRMSE(time_pre: np.array, time_gt: np.array, state_pre: np.array, state_gt: np.array):
     t_min = np.min(time_pre)
@@ -49,14 +50,15 @@ def draw(root: str):
     g_t, g_r, g_d = parseFile(root, "groundtruth.txt")
     
     if SHOW_DEGREE:
-        plt.plot(np.array(m_t), np.array(m_d), 'r', label="aruco")
-        plt.plot(np.array(e_t), np.array(e_d), 'g', label="filtered")
+        plt.plot(np.array(m_t), np.array(m_d) - OFFSET, 'r', label="aruco")
+        plt.plot(np.array(e_t), np.array(e_d) - OFFSET, 'g', label="filtered")
         plt.plot(np.array(g_t), np.array(g_d), 'b', label="groundtruth")
     else:
         plt.plot(np.array(m_t), np.array(m_r), 'r', label="aruco")
         plt.plot(np.array(e_t), np.array(e_r), 'g', label="filtered")
         plt.plot(np.array(g_t), np.array(g_r), 'b', label="groundtruth")
-    plt.legend(loc="upper left")
+
+    plt.legend(loc="lower right")
 
     rmse_measurenment_gt = calculateRMSE(m_t, g_t, m_d, g_d)
     rmse_estimation_gt = calculateRMSE(e_t, g_t, e_d, g_d)
@@ -64,13 +66,16 @@ def draw(root: str):
     print(f"rmse-aruco: {rmse_measurenment_gt} in degree")
     print(f"rmse-filtered: {rmse_estimation_gt} in degree")
 
+    plt.text(np.min(g_t), np.min(g_d), f"rmse of measurement: {rmse_measurenment_gt}", fontsize=12, style="normal")
+    plt.text(np.min(g_t), np.min(g_d) + 3, f"rmse of estimation: {rmse_estimation_gt}", fontsize=12, style="normal")
+    
     plt.show()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--root", "-r", default="/home/ubuntu/Workspace/KIT/slamdog/my_aruco_ws/src/my_aruco/eval/test")
+        "--root", "-r", default="/home/ubuntu/Workspace/KIT/slamdog/my_aruco_ws/src/my_aruco/eval/8_good")
     args = parser.parse_args()
 
     draw(args.root)

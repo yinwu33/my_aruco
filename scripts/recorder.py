@@ -49,9 +49,9 @@ class Evaluator():
     @staticmethod
     def parseData(msg: AngleStamped):
         time = msg.header.stamp.to_sec()
-        angle = msg.angle
+        radian = msg.radian
         
-        text = f"{time} {angle}\n"
+        text = f"{time} {radian}\n"
         return text
     
 

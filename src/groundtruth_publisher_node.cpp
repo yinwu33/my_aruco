@@ -8,10 +8,6 @@
 
 #include <Eigen/Dense>
 
-// ! to be deleted
-// static Eigen::Quaterniond AddOffset(const Eigen::Quaterniond& input) {
-//   return input;
-// }
 
 static double calculateYaw(const Eigen::Quaterniond& q) {
   // base on franka robot

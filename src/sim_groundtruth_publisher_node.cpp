@@ -9,15 +9,17 @@
 
 #include <Eigen/Dense>
 
-// ! to be deleted
-// static Eigen::Quaterniond AddOffset(const Eigen::Quaterniond& input) {
-//   return input;
-// }
 
-static double calculateYaw(const Eigen::Quaterniond& q) {
-  // base on franka robot
+static double calculateYaw_arm(const Eigen::Quaterniond& q) {
+  // base on sim robot arm
+  Eigen::Vector3d vector = -q.matrix() * Eigen::Vector3d(1, 0, 0);
+  return -atan2(vector[1], vector[2]);
+}
+
+static double calculateYaw_slamdog(const Eigen::Quaterniond& q) {
+  // for sim slamdog
   Eigen::Vector3d vector = q.matrix() * Eigen::Vector3d(1, 0, 0);
-  return - atan2(vector[1], vector[0]);
+  return -atan2(vector[1], vector[0]);
 }
 
 int main(int argc, char** argv) {
@@ -25,6 +27,7 @@ int main(int argc, char** argv) {
   ros::NodeHandle nh, nh_private("~");
   ros::Publisher gt_pub = nh.advertise<my_aruco::AngleStamped>("groundtruth", 100);
 
+  std::string task = nh_private.param<std::string>("task", "arm");
   std::string frame_id = nh_private.param<std::string>("frame_id", "link_base");
   std::string child_frame_id = nh_private.param<std::string>("child_frame_id", "link_trailer");
   int fps = nh_private.param<int>("fps", 30);
@@ -53,7 +56,12 @@ int main(int argc, char** argv) {
     }
 
     tf::Quaternion q = transform.getRotation();
-    double yaw = calculateYaw(Eigen::Quaterniond(q.w(), q.x(), q.y(), q.z()));
+    double yaw;
+    if (task == "arm")
+      yaw = calculateYaw_arm(Eigen::Quaterniond(q.w(), q.x(), q.y(), q.z()));
+    else 
+      yaw = calculateYaw_slamdog(Eigen::Quaterniond(q.w(), q.x(), q.y(), q.z()));
+
 
     // if (use_degree) // ! to be deleted
     //   yaw = yaw * 180 / M_PI;

@@ -4,6 +4,7 @@
 
 #include "my_aruco/subscriber/image_subscriber.h"
 #include "my_aruco/model/aruco_detector.h"
+#include "my_aruco/model/aruco_detector2.h"
 #include "my_aruco/optim/kalman_filter.h"
 
 #include "my_aruco/AngleStamped.h"
@@ -49,7 +50,14 @@ int main(int argc, char** argv) {
   // create instances
   ImageSubscriber::Ptr pImageSub = std::make_shared<ImageSubscriber>(nh, image_topic, 100);
   ArucoDetector arucoDetector(fs, pImageSub, nh);
-  KalmanFilter filter(1, 1, 1); // todo use config file with cv::File
+
+  double P0 = (double)fs["P0"];
+  double Q = (double)fs["Q"];
+  double R = (double)fs["R"];
+  ROS_INFO("P0: %f", P0);
+  ROS_INFO("Q: %f", Q);
+  ROS_INFO("R: %f", R);
+  KalmanFilter filter(P0, Q, R); // todo use config file with cv::File
 
 
   ros::Rate rate(fps); // to be deleted
