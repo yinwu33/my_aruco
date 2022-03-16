@@ -33,3 +33,7 @@ marker_length: 0.05 # ! todo
 do_publish: 0  # 0 for false 1 for true
 topic_name_marker_poses: "marker_poses"
 topic_name_aruco_image: "aruco_image"
+
+P0: 10.0
+Q: 1.0
+R: 1.0

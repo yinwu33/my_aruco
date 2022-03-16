@@ -7,9 +7,11 @@
     </node>
 
     <node pkg="my_aruco" type="sim_groundtruth_publisher_node" name="sim_groundtruth_publisher_node">
-        <param name="frame_id" value="base"/>
-        <param name="child_frame_id" value="tcp"/>
-
+        <!-- <param name="frame_id" value="base"/>
+        <param name="child_frame_id" value="tcp"/> -->
+        <param name="task" value="slamdog"/>
+        <param name="frame_id" value="link_base"/>
+        <param name="child_frame_id" value="link_trailer"/>
     </node>
 
     <!-- <node pkg="my_aruco" type="optim_node" name="optim_node" output="screen">

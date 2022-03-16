@@ -8,11 +8,11 @@
     <xacro:property name="z_length" value="0.4"/>
     <xacro:property name="wheel_length" value="0.1"/>
     <xacro:property name="wheel_radius" value="0.3"/>
-    <xacro:property name="distance" value="1.0"/>
+    <xacro:property name="l1" value="0.4"/>
+    <xacro:property name="l2" value="1"/>
     <xacro:property name="link_width" value="0.05"/>
     <xacro:property name="move_y" value="0.3"/>
     <xacro:property name="move_z" value="0.1"/>
-    <xacro:property name="installation_position" value="-${x_length/2 + 0.05}"/>
 
 
 
@@ -52,6 +52,46 @@
             </geometry>
         </collision>
 
+        <visual>
+            <origin xyz="-${l1/2} 0.0 -${z_length/2 - link_width/2}" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="${l1} ${link_width}  ${link_width}"/>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+
+        <!-- stable -->
+
+        <visual>
+            <origin xyz="${x_length/2 - link_width/2} 0.0 ${-z_length/4 - wheel_radius/2}" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size=" ${link_width}  ${link_width} ${wheel_radius - z_length/2}"/>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+
+        <collision>
+            <origin xyz="${x_length/2 - link_width/2} 0.0 ${-z_length/4 - wheel_radius/2}" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size=" ${link_width}  ${link_width} ${wheel_radius - z_length/2}"/>
+            </geometry>
+        </collision>
+
+        <visual>
+            <origin xyz="-${x_length/2 - link_width/2} 0.0 ${-z_length/4 - wheel_radius/2}" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size=" ${link_width}  ${link_width} ${wheel_radius - z_length/2}"/>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+
+        <collision>
+            <origin xyz="-${x_length/2 - link_width/2} 0.0 ${-z_length/4 - wheel_radius/2}" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size=" ${link_width}  ${link_width} ${wheel_radius - z_length/2}"/>
+            </geometry>
+        </collision>
+
 
         <inertial>
             <mass value="${mass}"/>
@@ -64,7 +104,7 @@
 
         <!-- body -->
         <visual>
-            <origin xyz="${-distance} 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <origin xyz="${-l2} 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <box size="${x_length} ${y_length}  ${z_length}"/>
             </geometry>
@@ -73,7 +113,7 @@
 
 
         <collision>
-            <origin xyz="${-distance} 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <origin xyz="${-l2} 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <box size="${x_length} ${y_length}  ${z_length}"/>
             </geometry>
@@ -81,7 +121,7 @@
 
         <!-- shaft -->
         <visual>
-            <origin xyz="0.0 0.0 -${z_length/2 - link_width}" rpy="0.0 0.0 0.0"/>
+            <origin xyz="-${link_width/2} 0.0 -${z_length/2 - link_width}" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <box size="${link_width} ${link_width}  ${link_width*2}"/>
             </geometry>
@@ -89,18 +129,18 @@
         </visual>
 
 
-        <collision>
+        <!-- <collision>
             <origin xyz="0.0 0.0 -${z_length/2 - link_width}" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <box size="${link_width} ${link_width}  ${link_width*2}"/>
             </geometry>
-        </collision>
+        </collision> -->
 
         <!-- link -->
         <visual>
-            <origin xyz="${-distance/2} 0.0 -${z_length/2 - link_width/2}" rpy="0.0 0.0 0.0"/>
+            <origin xyz="${-l2/2} 0.0 -${z_length/2 - link_width/2}" rpy="0.0 0.0 0.0"/>
             <geometry>
-                <box size="${distance} ${link_width}  ${link_width}"/>
+                <box size="${l2} ${link_width}  ${link_width}"/>
             </geometry>
         </visual>
 
@@ -113,7 +153,7 @@
 
         <inertial>
             <mass value="${mass}"/>
-            <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="1"/>
+            <inertia ixx="1" ixy="0.0" ixz="0.0" iyy="1" iyz="0.0" izz="0.1"/>
         </inertial>
     </link>
 
@@ -283,49 +323,49 @@
     </joint>
 
     <joint name="joint_trailer_left_wheel" type="continuous">
-        <origin xyz="-${distance} ${y_length/2 + wheel_length/2} 0.0" rpy="0.0 0.0 0.0"/>
+        <origin xyz="-${l2} ${y_length/2 + wheel_length/2} 0.0" rpy="0.0 0.0 0.0"/>
         <parent link="link_trailer"/>
         <child link="link_trailer_left_wheel"/>
         <axis xyz="0.0 1.0 0.0"/>
     </joint>
 
     <joint name="joint_trailer_right_wheel" type="continuous">
-        <origin xyz="-${distance} -${y_length/2 + wheel_length/2} 0.0" rpy="0.0 0.0 0.0"/>
+        <origin xyz="-${l2} -${y_length/2 + wheel_length/2} 0.0" rpy="0.0 0.0 0.0"/>
         <parent link="link_trailer"/>
         <child link="link_trailer_right_wheel"/>
         <axis xyz="0.0 1.0 0.0"/>
     </joint>
 
     <joint name="joint_trailer" type="continuous">
-        <origin xyz="${installation_position} 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <origin xyz="-${l1} 0.0 0.0" rpy="0.0 0.0 0.0"/>
         <parent link="link_base"/>
         <child link="link_trailer"/>
         <axis xyz="0.0 0.0 1.0"/>
     </joint>
 
     <joint name="fix_board_0" type="fixed">
-        <origin xyz="${-distance+x_length/2} ${move_y} -${z_length/2 - move_z}" rpy="0.0 0.0 0.0"/>
+        <origin xyz="${-l2+x_length/2} ${move_y} -${z_length/2 - move_z}" rpy="0.0 0.0 0.0"/>
         <parent link="link_trailer"/>
         <child link="board_0"/>
         <!-- <axis xyz="0.0 0.0 1.0"/> -->
     </joint>
 
     <joint name="fix_board_1" type="fixed">
-        <origin xyz="${-distance+x_length/2} ${-move_y} -${z_length/2 - move_z}" rpy="0.0 0.0 0.0"/>
+        <origin xyz="${-l2+x_length/2} ${-move_y} -${z_length/2 - move_z}" rpy="0.0 0.0 0.0"/>
         <parent link="link_trailer"/>
         <child link="board_1"/>
         <!-- <axis xyz="0.0 0.0 1.0"/> -->
     </joint>
 
     <joint name="fix_board_2" type="fixed">
-        <origin xyz="${-distance+x_length/2} ${move_y} ${z_length/2 - move_z}" rpy="0.0 0.0 0.0"/>
+        <origin xyz="${-l2+x_length/2} ${move_y} ${z_length/2 - move_z}" rpy="0.0 0.0 0.0"/>
         <parent link="link_trailer"/>
         <child link="board_2"/>
         <!-- <axis xyz="0.0 0.0 1.0"/> -->
     </joint>
 
     <joint name="fix_board_3" type="fixed">
-        <origin xyz="${-distance+x_length/2} ${-move_y} ${z_length/2 - move_z}" rpy="0.0 0.0 0.0"/>
+        <origin xyz="${-l2+x_length/2} ${-move_y} ${z_length/2 - move_z}" rpy="0.0 0.0 0.0"/>
         <parent link="link_trailer"/>
         <child link="board_3"/>
         <!-- <axis xyz="0.0 0.0 1.0"/> -->
