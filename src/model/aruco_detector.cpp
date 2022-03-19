@@ -3,9 +3,6 @@
 namespace my_aruco
 {
 
-// static Eigen::Quaterniond AddOffset(const Eigen::Quaterniond& input) {
-//   return input;
-// }
 
 static double calculateYaw(const Eigen::Quaterniond& q) {
   Eigen::Vector3d vector = -q.matrix() * Eigen::Vector3d(0, 0, 1);
@@ -41,6 +38,8 @@ ArucoDetector::ArucoDetector(cv::FileStorage& fs, ImageSubscriber::Ptr pImageSub
 
   // opencv aruco initialize
   parameters_ = cv::aruco::DetectorParameters::create();
+  parameters_->cornerRefinementMethod = cv::aruco::CORNER_REFINE_SUBPIX;
+  // parameters_->cornerRefinementWinSize = 11;
   dictionary_ = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
 
   if (doPosePublish_) {
