@@ -12,7 +12,7 @@ void ImageSubscriber::MsgCallback(const sensor_msgs::ImageConstPtr& msg) {
   m_.lock();
   std::shared_ptr<cv::Mat> pImage = std::make_shared<cv::Mat>(cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8)->image);
 
-  ImageStamped::Ptr pImageStamped = std::make_shared<ImageStamped>(msg->header.stamp, pImage);
+  ImageStamped::Ptr pImageStamped = std::make_shared<ImageStamped>(msg->header.stamp, *pImage);
 
   while (imageBuffer_.size() >= buffer_size_) {
     imageBuffer_.pop_front();

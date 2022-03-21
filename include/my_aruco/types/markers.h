@@ -7,9 +7,17 @@ namespace my_aruco
 
 struct Markers {
 
-  ImageStamped image;
+  ImageStamped imageStamped;
 
-  void addImageStamped(const ImageStamped& imageStamped);
+  std::vector<int> markerIds;
+  std::vector<std::vector<cv::Point2f>> markerCorners;
+  std::vector<std::vector<cv::Point2f>> rejectedCandidates;
+  std::vector<cv::Vec3d> rvecs;
+  std::vector<cv::Vec3d> tvecs;
+
+  void AddImageStamped(const ImageStamped&);
+
+  static void GetQuaternion(const cv::Vec3d&, Eigen::Quaterniond&);
 
 };
   

@@ -10,12 +10,11 @@ namespace my_aruco
 struct ImageStamped {
   typedef std::shared_ptr<ImageStamped> Ptr;
   ImageStamped();
-  ImageStamped(ros::Time timestamp, std::shared_ptr<cv::Mat> pImage) : timestamp(timestamp), pImage(pImage) {}
+  ImageStamped(ros::Time timestamp, cv::Mat image) : timestamp(timestamp), image(image) {}
 
 
-  double time; // ! to be deleted
   ros::Time timestamp;
-  std::shared_ptr<cv::Mat> pImage;
+  cv::Mat image;
 };
 
 } // namespace my_aruco

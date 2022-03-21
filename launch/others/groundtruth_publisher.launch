@@ -4,6 +4,6 @@
 
   <node pkg="my_aruco" type="groundtruth_publisher_node" name="groundtruth_publisher_node" output="screen">
     <param name="frame_id" value="panda_link0"/>
-    <param name="child_frame_id" value="panda_link7"/>
+    <param name="child_frame_id" value="camera"/>
   </node>
 </launch>

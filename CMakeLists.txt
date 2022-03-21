@@ -130,9 +130,16 @@ include_directories(
 )
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/my_aruco.cpp
-# )
+add_library(${PROJECT_NAME}
+  src/detector/aruco_detector.cpp
+  src/detector/aruco_detector_opencv.cpp
+  src/optim/aruco_optimizer.cpp
+  src/types/markers.cpp
+  src/utils/parameters.cpp
+  include/my_aruco/common_include.hpp
+)
+
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} Eigen3::Eigen)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries

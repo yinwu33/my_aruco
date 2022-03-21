@@ -20,6 +20,7 @@ enum class Mode {
 struct Parameters {
   Parameters() = default;
   Parameters(const cv::FileNode& node);
+  Parameters(const std::string& configFile);
 
   Mode mode{Mode::ARUCO_1D};
 
@@ -27,6 +28,16 @@ struct Parameters {
 
   Optimizer optimizer{Optimizer::MOVING_AVG};
 
+  cv::Mat cameraMatrix;
+  cv::Mat distCoeffs;
+
+  double markerSize;
+
+  // calculate yaw method
+  Eigen::Vector3d rotateVector;
+  std::pair<int, int> projectPlane;
+
+  void Logging();
 };
   
 } // namespace my_aruco

@@ -13,6 +13,8 @@ public:
 
   bool Detect(const ImageStamped& image);
 
+  bool PoseEstimate();
+
 private:
   cv::Ptr<cv::aruco::Dictionary> dict_;
   cv::Ptr<cv::aruco::DetectorParameters> param_;

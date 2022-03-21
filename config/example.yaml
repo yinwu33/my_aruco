@@ -1,5 +1,11 @@
 %YAML:1.0
 
+mode: 0
+
+detector: 0
+
+optimizer: 0
+
 # ==================== camera informations ====================
 width: 640
 height: 480
@@ -23,6 +29,16 @@ camera_frame_id: "camera"
 # ==================== marker informations ====================
 # marker informations
 marker_length: 0.079
+marker_size: 0.079
+
+rotation_vector: !!opencv-matrix
+    rows: 1
+    cols: 3
+    dt: f
+    data: [0.0, 0.0, 1.0]
+
+plane_vector_1: 1
+plane_vector_2: 2
 
 # ==================== ros informations ====================
 do_publish: 0  # 0 for false 1 for true

@@ -57,7 +57,7 @@ bool ArucoDetector::Detect() {
   for (auto it = dqBuffer_.begin(); it != dqBuffer_.end(); ++it) {
     // todo make it a list
     timestamp_ = (**it).timestamp;
-    image_ = (**it).pImage->clone();
+    image_ = (**it).image.clone();
     cv::aruco::detectMarkers(image_, dictionary_, markerCorners_, markerIds_, parameters_, rejectedCandidates_);
   }
   dqBuffer_.clear();

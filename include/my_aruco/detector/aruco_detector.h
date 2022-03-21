@@ -15,10 +15,17 @@ public:
   virtual bool Detect(const my_aruco::ImageStamped) = 0;
   virtual bool PoseEstimate() = 0;
 
-private:
+  void GetAvgResult();
+
+  virtual void GetResult(double&);
+  virtual bool GetResult(Eigen::Vector3d&);
+  virtual bool GetResult(Eigen::Matrix4d&);
+
+
+protected:
   Parameters p_;
 
-  std::shared_ptr<Markers> pMarkers_ = nullptr;
+  Markers markers_;
 };
   
 } // namespace my_aruco::detector
