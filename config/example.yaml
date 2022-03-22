@@ -47,6 +47,8 @@ topic_image_raw: "image_raw"
 
 fps: 100
 
+window_size: 10
+
 P0: 10.0
 Q: 1.0
 R: 1.0

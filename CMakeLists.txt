@@ -155,12 +155,12 @@ ${PROJECT_NAME})
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_node src/my_aruco_node.cpp
-                                    src/subscriber/image_subscriber.cpp
-                                    src/model/aruco_detector.cpp
-                                    src/model/aruco_detector2.cpp
-                                    src/optim/kalman_filter.cpp
-                                    )
+# add_executable(${PROJECT_NAME}_node src/my_aruco_node.cpp
+#                                     src/subscriber/image_subscriber.cpp
+#                                     src/model/aruco_detector.cpp
+#                                     src/model/aruco_detector2.cpp
+#                                     src/optim/kalman_filter.cpp
+#                                     )
 
 add_executable(image_publisher_node src/image_publisher_node.cpp
 )
@@ -168,8 +168,8 @@ add_executable(image_publisher_node src/image_publisher_node.cpp
 add_executable(groundtruth_publisher_node src/groundtruth_publisher_node.cpp)
 add_executable(sim_groundtruth_publisher_node src/sim_groundtruth_publisher_node.cpp)
 
-add_executable(optim_node src/optim_node.cpp
-                          src/optim/kalman_filter_ddrobot.cpp)
+# add_executable(optim_node src/optim_node.cpp
+#                           src/optim/kalman_filter_ddrobot.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -182,10 +182,10 @@ add_executable(optim_node src/optim_node.cpp
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(${PROJECT_NAME}_node
-${catkin_LIBRARIES}
-Eigen3::Eigen
-)
+# target_link_libraries(${PROJECT_NAME}_node
+# ${catkin_LIBRARIES}
+# Eigen3::Eigen
+# )
 
 target_link_libraries(image_publisher_node
 ${catkin_LIBRARIES}
@@ -201,9 +201,9 @@ ${catkin_LIBRARIES}
 Eigen3::Eigen
 )
 
-target_link_libraries(optim_node
-${catkin_LIBRARIES}
-Eigen3::Eigen)
+# target_link_libraries(optim_node
+# ${catkin_LIBRARIES}
+# Eigen3::Eigen)
 
 #############
 ## Install ##

@@ -27,6 +27,8 @@ public:
 
     pDetector_ = my_aruco::detector::create(p_);
     pOptimizer_ = my_aruco::optim::create(p_);
+
+    interval_ = 1 / p_.fps;
   }
 
   bool Run() {
@@ -38,11 +40,13 @@ public:
     if (!pDetector_->Detect(markers_))
       return false;
 
+    markers_.pImageStamped->timestamp = markers_.pImageStamped->timestamp;
+
     pDetector_->PoseEstimate(markers_);
     pDetector_->GetYaw(markers_);
 
     // publish measurement angle
-    measurementMsg_.header.stamp = markers_.pImageStamped->timestamp;
+    measurementMsg_.header.stamp = markers_.pImageStamped->timestamp + ros::Duration(interval_ * count_);
     measurementMsg_.radian = markers_.yaw;
     measurementMsg_.degree = measurementMsg_.radian * 180 / M_PI;
     measurementPub_.publish(measurementMsg_);
@@ -50,13 +54,13 @@ public:
     pOptimizer_->Update(markers_);
 
     // publish estimation angle
-    estimationMsg_.header.stamp = markers_.pImageStamped->timestamp;
+    estimationMsg_.header.stamp = markers_.pImageStamped->timestamp + ros::Duration(interval_ * count_);
     estimationMsg_.radian = markers_.optimizedYaw;
     estimationMsg_.degree = estimationMsg_.radian * 180 / M_PI;
     estimationPub_.publish(estimationMsg_);
 
     // markers_.Clear();
-
+    ++count_;
     return true;
 
   }
@@ -75,6 +79,7 @@ public:
   }
 
   void ImageCallback(const sensor_msgs::ImagePtr& msg) {
+    count_ = 0.0;
     markers_.Clear();
     my_aruco::ImageStamped::Ptr pTempImageStamped = std::make_shared<my_aruco::ImageStamped>(msg->header.stamp, cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8)->image);
 
@@ -109,6 +114,9 @@ private:
   my_aruco::optim::ArucoOptimizer::Ptr pOptimizer_;
 
   my_aruco::Markers markers_;
+
+  size_t count_ = 0.0;
+  double interval_ = 0.0;
 
 };
 

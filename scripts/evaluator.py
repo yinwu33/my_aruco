@@ -49,14 +49,23 @@ def draw(root: str):
     e_t, e_r, e_d = parseFile(root, "estimation.txt")
     g_t, g_r, g_d = parseFile(root, "groundtruth.txt")
     
+    fig = plt.figure()
+    
+    ax_m = plt.subplot(211)
+    ax_e = plt.subplot(212)
+    
+    
+    
     if SHOW_DEGREE:
-        plt.plot(np.array(m_t), np.array(m_d) - OFFSET, 'r', label="aruco")
-        plt.plot(np.array(e_t), np.array(e_d) - OFFSET, 'g', label="filtered")
-        plt.plot(np.array(g_t), np.array(g_d), 'b', label="groundtruth")
+        ax_m.plot(np.array(m_t), np.array(m_d) - OFFSET, c='r', label="aruco")
+        ax_m.plot(np.array(g_t), np.array(g_d), c='b', label="groundtruth")
+        
+        ax_e.plot(np.array(e_t), np.array(e_d) - OFFSET, c='g', label="filtered")
+        ax_e.plot(np.array(g_t), np.array(g_d), c='b', label="groundtruth")
     else:
-        plt.plot(np.array(m_t), np.array(m_r), 'r', label="aruco")
-        plt.plot(np.array(e_t), np.array(e_r), 'g', label="filtered")
-        plt.plot(np.array(g_t), np.array(g_r), 'b', label="groundtruth")
+        plt.plot(np.array(m_t), np.array(m_r), c='r', label="aruco")
+        plt.plot(np.array(e_t), np.array(e_r), c='g', label="filtered")
+        plt.plot(np.array(g_t), np.array(g_r), c='b', label="groundtruth")
 
     plt.legend(loc="lower right")
 
@@ -66,8 +75,8 @@ def draw(root: str):
     print(f"rmse-aruco: {rmse_measurenment_gt} in degree")
     print(f"rmse-filtered: {rmse_estimation_gt} in degree")
 
-    plt.text(np.min(g_t), np.min(g_d), f"rmse of measurement: {rmse_measurenment_gt}", fontsize=12, style="normal")
-    plt.text(np.min(g_t), np.min(g_d) + 3, f"rmse of estimation: {rmse_estimation_gt}", fontsize=12, style="normal")
+    ax_m.text(np.min(g_t), np.min(g_d), f"rmse of measurement: {rmse_measurenment_gt}", fontsize=12, style="normal")
+    ax_e.text(np.min(g_t), np.min(g_d) + 3, f"rmse of estimation: {rmse_estimation_gt}", fontsize=12, style="normal")
     
     plt.show()
 

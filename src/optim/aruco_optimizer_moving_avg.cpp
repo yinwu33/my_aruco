@@ -3,6 +3,7 @@
 namespace my_aruco::optim {
 
 ArucoOptimizerMovingAvg::ArucoOptimizerMovingAvg(const Parameters& p) : ArucoOptimizer(p) {
+  windowSize_ = p_.windowSize;
 }
 
 void ArucoOptimizerMovingAvg::SetWindowSize(int size) {

@@ -14,7 +14,7 @@ detector: 0
 # 0: Moving Average
 optimizer: 0
 
-fps: 100 # big fps will detect on image multiple times
+fps: 25 # big fps will detect on image multiple times
 
 # ==================== camera informations ====================
 width: 848
@@ -56,6 +56,8 @@ topic_image_aruco: "aruco_image"
 topic_image_raw: "/camera/color/image_raw"
 
 # ==================== kalman filter ====================
+
+window_size: 5
 
 P0: 10.0
 Q: 1.0

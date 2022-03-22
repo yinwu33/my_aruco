@@ -15,7 +15,6 @@ public:
 
   bool PoseEstimate(my_aruco::Markers& );
 
-  bool Draw(my_aruco::Markers& );
 
 private:
   cv::Ptr<cv::aruco::Dictionary> dict_;

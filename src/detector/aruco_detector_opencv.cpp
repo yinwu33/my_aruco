@@ -25,9 +25,5 @@ bool ArucoDetectorOpenCV::PoseEstimate(my_aruco::Markers& markers) {
   return true;
 }
 
-bool ArucoDetectorOpenCV::Draw(my_aruco::Markers&) {
-  
-}
-
 
 }

@@ -24,6 +24,7 @@ Parameters::Parameters(const cv::FileStorage& node) {
 
   markerSize = (double)node["marker_size"];
 
+  windowSize = (int)node["window_size"];
   // the parameters to calculate yaw angle
   cv::Mat rotateVector_temp;
   node["rotation_vector"] >> rotateVector_temp;
@@ -31,6 +32,8 @@ Parameters::Parameters(const cv::FileStorage& node) {
 
   projectPlane.first = (int)node["plane_vector_1"];
   projectPlane.second = (int)node["plane_vector_2"];
+
+  fps = (int)node["fps"];
 
 }
 
@@ -81,6 +84,7 @@ void Parameters::Logging() {
   std::cout << "Camera Matrix: \n" << cameraMatrix << std::endl;
   std::cout << "Distortion Coeffience: " << distCoeffs << std::endl;
   std::cout << "Marker size: " << markerSize << std::endl;
+  std::cout << "window size: " << windowSize << std::endl;
   std::cout << "For 1D Mode: " << std::endl;
   std::cout << "Vector will be rotated: " << rotateVector.transpose() << std::endl;
 

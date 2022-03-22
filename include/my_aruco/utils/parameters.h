@@ -39,9 +39,12 @@ struct Parameters {
   // calculate yaw method
   Eigen::Vector3d rotateVector;
   std::pair<int, int> projectPlane;
+  size_t windowSize = 5;
 
   std::string topicImageRaw;
   std::string topicImageAruco;
+
+  size_t fps;
 
 public:
   void Logging();
