@@ -7,28 +7,27 @@ detector: 0
 optimizer: 0
 
 # ==================== camera informations ====================
-width: 640
+width: 848
 height: 480
 # camera matrix
 K: !!opencv-matrix
     rows: 3
     cols: 3
     dt: f
-    data: [ 660.158566, 0.000000, 319.013077, 0.000000, 662.195692, 246.567240, 0.000000, 0.000000, 1.000000 ]
+    data: [ 605.3770751953125, 0.0, 413.17822802970477, 0.0, 613.2453002929688, 250.7035280346754, 0.0, 0.0, 1.0 ]
 
 # distortion coefficients
 D: !!opencv-matrix
     rows: 1
     cols: 5
     dt: f
-    data: [ 0.039830, -0.139520, -0.001142, 0.000870, 0.000000 ]
+    data: [ 0.07543221487292956, -0.1418134289221999, 0.004338076200071399, -0.004246885746402398, 0.0 ]
 
 
 camera_frame_id: "camera"
 
 # ==================== marker informations ====================
 # marker informations
-marker_length: 0.079
 marker_size: 0.079
 
 rotation_vector: !!opencv-matrix
@@ -38,14 +37,15 @@ rotation_vector: !!opencv-matrix
     data: [0.0, 0.0, 1.0]
 
 plane_vector_1: 1
-plane_vector_2: 2
+plane_vector_2: 3
 
 # ==================== ros informations ====================
 do_publish: 0  # 0 for false 1 for true
 topic_name_marker_poses: "marker_poses"
-topic_name_aruco_image: "aruco_image"
+topic_image_aruco: "aruco_image"
+topic_image_raw: "image_raw"
 
-fps: 20
+fps: 100
 
 P0: 10.0
 Q: 1.0

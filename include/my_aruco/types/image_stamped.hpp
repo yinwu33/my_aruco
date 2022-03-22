@@ -8,7 +8,9 @@
 namespace my_aruco
 {
 struct ImageStamped {
-  typedef std::shared_ptr<ImageStamped> Ptr;
+
+  using Ptr = std::shared_ptr<ImageStamped>;
+
   ImageStamped();
   ImageStamped(ros::Time timestamp, cv::Mat image) : timestamp(timestamp), image(image) {}
 

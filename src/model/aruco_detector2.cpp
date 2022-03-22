@@ -36,7 +36,7 @@ ArucoDetector2::ArucoDetector2(cv::FileStorage& fs, ImageSubscriber::Ptr pImageS
   fs_["D"] >> distCoeffs_;
 
   // aruco markers initialize
-  markerSize_ = (double)fs_["marker_length"]; // todo use right marker size
+  markerSize_ = (double)fs_["marker_size"]; // todo use right marker size
   ROS_INFO("marker size: %f", markerSize_);
 
   // opencv aruco initialize

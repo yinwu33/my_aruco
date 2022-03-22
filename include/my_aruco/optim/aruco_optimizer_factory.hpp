@@ -11,7 +11,7 @@ std::unique_ptr<ArucoOptimizer> create(const Parameters& p) {
   switch (p.optimizer)
   {
   case my_aruco::Optimizer::MOVING_AVG:
-    return std::make_unique<ArucoOptimzerMovingAvg>(p);
+    return std::make_unique<ArucoOptimizerMovingAvg>(p);
   
   default:
     return nullptr;

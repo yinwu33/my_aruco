@@ -8,12 +8,15 @@ namespace my_aruco::optim
 
 class ArucoOptimizer {
 public:
+
+  using Ptr = std::unique_ptr<ArucoOptimizer>;
+
   ArucoOptimizer() = delete;
   ArucoOptimizer(const Parameters& p);
 
-  virtual void Update(Markers& markers) = 0;
+  virtual void Update(my_aruco::Markers& markers) = 0;
 
-private:
+protected:
   Parameters p_;
 };
   

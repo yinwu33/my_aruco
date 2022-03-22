@@ -1,19 +1,23 @@
+#pragma once
+
 #include "my_aruco/optim/aruco_optimizer.h"
 
 
 namespace my_aruco::optim
 {
 
-class ArucoOptimzerMovingAvg : public ArucoOptimizer {
+class ArucoOptimizerMovingAvg : public ArucoOptimizer {
 public:
-  ArucoOptimzerMovingAvg(const Parameters* p);
+  ArucoOptimizerMovingAvg() = delete;
+  ArucoOptimizerMovingAvg(const Parameters& p);
 
-  void Update(Markers& markers);
+  void SetWindowSize(int size);
+  void Update(my_aruco::Markers& markers);
 
 private:
-  int windowSize_;
+  int windowSize_ = 5;
   std::vector<double> buffer_;
 
 };
-  
+
 } // namespace my_aruco:optim

@@ -18,8 +18,11 @@ enum class Mode {
 };
 
 struct Parameters {
+
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW; // ? todo
+
   Parameters() = default;
-  Parameters(const cv::FileNode& node);
+  Parameters(const cv::FileStorage& node);
   Parameters(const std::string& configFile);
 
   Mode mode{Mode::ARUCO_1D};
@@ -37,6 +40,10 @@ struct Parameters {
   Eigen::Vector3d rotateVector;
   std::pair<int, int> projectPlane;
 
+  std::string topicImageRaw;
+  std::string topicImageAruco;
+
+public:
   void Logging();
 };
   

@@ -11,9 +11,11 @@ public:
   ArucoDetectorOpenCV() = delete;
   ArucoDetectorOpenCV(const Parameters& p);
 
-  bool Detect(const ImageStamped& image);
+  bool Detect(my_aruco::Markers& );
 
-  bool PoseEstimate();
+  bool PoseEstimate(my_aruco::Markers& );
+
+  bool Draw(my_aruco::Markers& );
 
 private:
   cv::Ptr<cv::aruco::Dictionary> dict_;

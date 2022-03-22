@@ -1,38 +1,61 @@
 %YAML:1.0
 
+# ==================== detector mode ====================
+
+# Mode
+# 0: 1D, get yaw angle
+mode: 0
+
+# Detector
+# 0: based on OpenCV
+detector: 0
+
+# Optimizer
+# 0: Moving Average
+optimizer: 0
+
+fps: 100 # big fps will detect on image multiple times
+
 # ==================== camera informations ====================
-width: 640
+width: 848
 height: 480
 # camera matrix
 K: !!opencv-matrix
     rows: 3
     cols: 3
     dt: f
-    data: [ 612.1585693359375, 0.0, 324.330322265625, 0.0, 612.0269165039062, 237.45274353027344, 0.0, 0.0, 1.0 ]
+    data: [ 605.3770751953125, 0.0, 413.17822802970477, 0.0, 613.2453002929688, 250.7035280346754, 0.0, 0.0, 1.0 ]
 
 # distortion coefficients
 D: !!opencv-matrix
     rows: 1
     cols: 5
     dt: f
-    data: [ 0.0, 0.0, 0.0, 0.0, 0.000000 ]
-
+    data: [ 0.07543221487292956, -0.1418134289221999, 0.004338076200071399, -0.004246885746402398, 0.0 ]
 
 camera_frame_id: "camera"
 
 # ==================== marker informations ====================
 # marker informations
-marker_length: 0.05 # ! todo
+marker_size: 0.079
 
-# 1. 0.152
-# 2. 0.101
-# 4. 0.079
-# 8. 0.051
+# ==================== Yaw angle caculation paramaters ====================
+rotation_vector: !!opencv-matrix
+    rows: 1
+    cols: 3
+    dt: f
+    data: [0.0, 0.0, 1.0]
+
+plane_vector_1: 1
+plane_vector_2: 3
 
 # ==================== ros informations ====================
 do_publish: 0  # 0 for false 1 for true
 topic_name_marker_poses: "marker_poses"
-topic_name_aruco_image: "aruco_image"
+topic_image_aruco: "aruco_image"
+topic_image_raw: "/camera/color/image_raw"
+
+# ==================== kalman filter ====================
 
 P0: 10.0
 Q: 1.0

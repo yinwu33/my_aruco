@@ -134,12 +134,18 @@ add_library(${PROJECT_NAME}
   src/detector/aruco_detector.cpp
   src/detector/aruco_detector_opencv.cpp
   src/optim/aruco_optimizer.cpp
+  src/optim/aruco_optimizer_moving_avg.cpp
   src/types/markers.cpp
   src/utils/parameters.cpp
   include/my_aruco/common_include.hpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} Eigen3::Eigen)
+
+add_executable(aruco_detect_node test/aruco_detect_node.cpp)
+target_link_libraries(aruco_detect_node ${catkin_LIBRARIES}
+Eigen3::Eigen
+${PROJECT_NAME})
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries

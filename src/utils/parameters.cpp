@@ -5,7 +5,8 @@
 
 namespace my_aruco
 {
-Parameters::Parameters(const cv::FileNode& node) {
+Parameters::Parameters(const cv::FileStorage& node) {
+  
   if ((int)node["mode"] == 0)
     mode = Mode::ARUCO_1D;
 
@@ -18,12 +19,15 @@ Parameters::Parameters(const cv::FileNode& node) {
   node["K"] >> cameraMatrix;
   node["D"] >> distCoeffs;
 
+  topicImageRaw = (std::string)node["topic_image_raw"];
+  topicImageAruco = (std::string)node["topic_image_aruco"];
+
   markerSize = (double)node["marker_size"];
 
   // the parameters to calculate yaw angle
   cv::Mat rotateVector_temp;
   node["rotation_vector"] >> rotateVector_temp;
-  rotateVector << rotateVector_temp.at<double>(0, 0), rotateVector_temp.at<double>(0, 1), rotateVector_temp.at<double>(0, 2);
+  rotateVector << rotateVector_temp.at<float>(0, 0), rotateVector_temp.at<float>(0, 1), rotateVector_temp.at<float>(0, 2);
 
   projectPlane.first = (int)node["plane_vector_1"];
   projectPlane.second = (int)node["plane_vector_2"];
@@ -74,7 +78,7 @@ void Parameters::Logging() {
     break;
   }
 
-  std::cout << "Camera Matrix: " << cameraMatrix << std::endl;
+  std::cout << "Camera Matrix: \n" << cameraMatrix << std::endl;
   std::cout << "Distortion Coeffience: " << distCoeffs << std::endl;
   std::cout << "Marker size: " << markerSize << std::endl;
   std::cout << "For 1D Mode: " << std::endl;
@@ -85,6 +89,9 @@ void Parameters::Logging() {
 
   std::cout << "Angle will be measured in plane: " << numberToAxis[projectPlane.first]
     << " and " << numberToAxis[projectPlane.second] << std::endl;
+
+  std::cout << "image raw topic: " << topicImageRaw << std::endl;
+  std::cout << "image aruco topic: " << topicImageAruco << std::endl;
   std::cout << "==================== Logging Finished ====================\n" << std::endl;
 
 }

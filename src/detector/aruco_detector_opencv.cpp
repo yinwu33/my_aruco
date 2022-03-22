@@ -10,18 +10,24 @@ ArucoDetectorOpenCV::ArucoDetectorOpenCV(const Parameters& p)
   // todo set parameters
 }
 
-bool ArucoDetectorOpenCV::Detect(const ImageStamped& image) {
-  markers_.AddImageStamped(image);
+bool ArucoDetectorOpenCV::Detect(my_aruco::Markers& markers) {
 
-  cv::aruco::detectMarkers(markers_.imageStamped.image, dict_, markers_.markerCorners,
-    markers_.markerIds, param_, markers_.rejectedCandidates, p_.cameraMatrix, p_.distCoeffs);
+  cv::aruco::detectMarkers(markers.pImageStamped->image, dict_, markers.markerCorners,
+    markers.markerIds, param_, markers.rejectedCandidates, p_.cameraMatrix, p_.distCoeffs);
+
+  return !markers.IsEmpty();
+}
+
+bool ArucoDetectorOpenCV::PoseEstimate(my_aruco::Markers& markers) {
+  cv::aruco::estimatePoseSingleMarkers(markers.markerCorners, p_.markerSize,
+    p_.cameraMatrix, p_.distCoeffs, markers.rvecs, markers.tvecs);
 
   return true;
 }
 
-bool ArucoDetectorOpenCV::PoseEstimate() {
-  cv::aruco::estimatePoseSingleMarkers(markers_.markerCorners, p_.markerSize,
-    p_.cameraMatrix, p_.distCoeffs, markers_.rvecs, markers_.tvecs);
+bool ArucoDetectorOpenCV::Draw(my_aruco::Markers&) {
+  
 }
+
 
 }
