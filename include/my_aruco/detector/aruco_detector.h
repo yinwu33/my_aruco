@@ -17,7 +17,7 @@ public:
 
   void GetAvgResult();
 
-  virtual void GetResult(double&);
+  virtual void GetYaw();
   virtual bool GetResult(Eigen::Vector3d&);
   virtual bool GetResult(Eigen::Matrix4d&);
 

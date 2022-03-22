@@ -45,6 +45,7 @@ do_publish: 0  # 0 for false 1 for true
 topic_name_marker_poses: "marker_poses"
 topic_name_aruco_image: "aruco_image"
 
+fps: 20
 
 P0: 10.0
 Q: 1.0

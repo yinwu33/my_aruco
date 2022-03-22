@@ -1,5 +1,7 @@
 #include "my_aruco/utils/parameters.h"
 
+#include <unordered_map>
+
 
 namespace my_aruco
 {
@@ -29,11 +31,62 @@ Parameters::Parameters(const cv::FileNode& node) {
 }
 
 Parameters::Parameters(const std::string& configFile) {
-  // todo
+  cv::FileStorage fs(configFile, cv::FileStorage::READ);
+
+  if (!fs.isOpened()) {
+    throw std::invalid_argument(" config file not exists");
+  }
+
+  // todo: may be wrong, due to local value
+  Parameters(fs.getFirstTopLevelNode());
 }
 
-Parameters::Logging() {
-  // todo
+void Parameters::Logging() {
+  std::cout << "==================== Parameter setting ====================\n" << std::endl;
+
+  switch (mode)
+  {
+  case Mode::ARUCO_1D:
+    std::cout << "Mode: 1D angle" << std::endl;
+    break;
+
+  default:
+    break;
+  }
+
+  switch (detector)
+  {
+  case Detector::OPENCV:
+    std::cout << "Detector: Aruco detector from OpenCV" << std::endl;
+    break;
+
+  default:
+    break;
+  }
+
+  switch (optimizer)
+  {
+  case Optimizer::MOVING_AVG:
+    std::cout << "Optimizer: Moving Average" << std::endl;
+    break;
+
+  default:
+    break;
+  }
+
+  std::cout << "Camera Matrix: " << cameraMatrix << std::endl;
+  std::cout << "Distortion Coeffience: " << distCoeffs << std::endl;
+  std::cout << "Marker size: " << markerSize << std::endl;
+  std::cout << "For 1D Mode: " << std::endl;
+  std::cout << "Vector will be rotated: " << rotateVector.transpose() << std::endl;
+
+  std::unordered_map<int, char> numberToAxis{ std::pair<int, char>{1, 'x'},
+    std::pair<int, char>{2, 'y'}, std::pair<int, char>{3, 'z'} };
+
+  std::cout << "Angle will be measured in plane: " << numberToAxis[projectPlane.first]
+    << " and " << numberToAxis[projectPlane.second] << std::endl;
+  std::cout << "==================== Logging Finished ====================\n" << std::endl;
+
 }
 
 } // namespace my_aruco

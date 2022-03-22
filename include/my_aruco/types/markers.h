@@ -15,6 +15,11 @@ struct Markers {
   std::vector<cv::Vec3d> rvecs;
   std::vector<cv::Vec3d> tvecs;
 
+  // result data
+  double yaw;
+  Eigen::Vector3d pose2D;
+  Eigen::Matrix4d pose3D;
+
   void AddImageStamped(const ImageStamped&);
 
   static void GetQuaternion(const cv::Vec3d&, Eigen::Quaterniond&);

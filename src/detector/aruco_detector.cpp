@@ -7,7 +7,7 @@ namespace my_aruco::detector
     
   }
 
-  void ArucoDetector::GetResult(double& yaw) {
+  void ArucoDetector::GetYaw() {
     std::vector<double> yawList;
 
     for (size_t i = 0; i < markers_.rvecs.size(); ++i) {
@@ -29,14 +29,14 @@ namespace my_aruco::detector
 
         sum += yawList[i];
       }
-      yaw = sum / (yawList.size() - 2);
+      markers_.yaw = sum / (yawList.size() - 2);
     }
     else {
       double sum = 0.0;
       for (const auto& y : yawList) {
         sum += y;
       }
-      yaw = sum / yawList.size();
+      markers_.yaw = sum / yawList.size();
     }
     return;
   }
