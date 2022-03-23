@@ -6,7 +6,7 @@
 namespace my_aruco
 {
 Parameters::Parameters(const cv::FileStorage& node) {
-  
+
   if ((int)node["mode"] == 0)
     mode = Mode::ARUCO_1D;
 
@@ -38,14 +38,16 @@ Parameters::Parameters(const cv::FileStorage& node) {
 }
 
 Parameters::Parameters(const std::string& configFile) {
-  cv::FileStorage fs(configFile, cv::FileStorage::READ);
-
-  if (!fs.isOpened()) {
+  if (!fs_.open(configFile, cv::FileStorage::READ)) {
     throw std::invalid_argument(" config file not exists");
   }
 
+  // if (!pFs->isOpened()) {
+  // // if (!fs.isOpened()) {
+  // }
+
   // todo: may be wrong, due to local value
-  Parameters(fs.getFirstTopLevelNode());
+  Parameters(fs_);
 }
 
 void Parameters::Logging() {

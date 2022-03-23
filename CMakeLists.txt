@@ -137,6 +137,7 @@ add_library(${PROJECT_NAME}
   src/optim/aruco_optimizer_moving_avg.cpp
   src/types/markers.cpp
   src/utils/parameters.cpp
+  src/aruco_flow_factory.cpp
   include/my_aruco/common_include.hpp
 )
 
@@ -217,6 +218,7 @@ Eigen3::Eigen
 catkin_install_python(PROGRAMS
   scripts/simulation/slamdog_controller_node.py
   scripts/simulation/robot_controller_node.py
+  scripts/simulation/reverse_pid_controller_node.py
   scripts/evaluator.py
   scripts/recorder.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

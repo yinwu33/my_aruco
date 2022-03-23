@@ -25,6 +25,8 @@ struct Parameters {
   Parameters(const cv::FileStorage& node);
   Parameters(const std::string& configFile);
 
+  cv::FileStorage fs_;
+
   Mode mode{Mode::ARUCO_1D};
 
   Detector detector{Detector::OPENCV};

@@ -13,6 +13,7 @@
     <remap from="/joint_states" to="/slamdog/joint_states" />
   </node>
 
-  <!-- <node pkg="my_aruco" type="slamdog_controller_node.py" name="slamdog_controller_node" required="true"/> -->
+
+  <node pkg="my_aruco" type="slamdog_controller_node.py" name="slamdog_controller_node" required="true"/>
     
 </launch>

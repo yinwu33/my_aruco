@@ -13,7 +13,7 @@ class Controller:
         self.right_pub = rospy.Publisher(
             "/slamdog/joint_right_controller/command", Float64, queue_size=1)
         self.cmd_vel_sub = rospy.Subscriber(
-            "/cmd_vel", Twist, queue_size=10, callback=self.callback)
+            "/cmd_vel", Twist, queue_size=1, callback=self.callback)
 
     def callback(self, msg: Twist):
         left_vel = Float64()
