@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="model" default="robot/aruco_robot_1.xacro"/>
+    <arg name="model" default="robot/aruco_robot_4.xacro"/>
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="paused" value="false"/>

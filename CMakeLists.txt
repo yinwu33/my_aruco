@@ -135,6 +135,7 @@ add_library(${PROJECT_NAME}
   src/detector/aruco_detector_opencv.cpp
   src/optim/aruco_optimizer.cpp
   src/optim/aruco_optimizer_moving_avg.cpp
+  src/optim/aruco_calibrator.cpp
   src/types/markers.cpp
   src/utils/parameters.cpp
   src/aruco_flow_factory.cpp

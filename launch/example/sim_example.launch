@@ -2,7 +2,7 @@
 <launch>
     <!-- todo -->
     <node pkg="my_aruco" type="aruco_detect_node" name="aruco_detect_node" output="screen" required="true">
-        <param name="config_file" value="$(find my_aruco)/config/example.yaml"/>
+        <param name="config_file" value="$(find my_aruco)/config/simulation_example.yaml"/>
     </node>
 
     <node pkg="my_aruco" type="sim_groundtruth_publisher_node" name="sim_groundtruth_publisher_node">
