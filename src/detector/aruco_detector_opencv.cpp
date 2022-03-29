@@ -3,24 +3,26 @@
 
 namespace my_aruco::detector {
 
-ArucoDetectorOpenCV::ArucoDetectorOpenCV(const Parameters& p)
-  : ArucoDetector(p) {
+ArucoDetectorOpenCV::ArucoDetectorOpenCV(const Parameters& p, const ros::NodeHandle& nh)
+  : ArucoDetector(p, nh) {
   dict_ = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
   param_ = cv::aruco::DetectorParameters::create();
   // todo set parameters
 }
 
-bool ArucoDetectorOpenCV::Detect(my_aruco::Markers& markers) {
+bool ArucoDetectorOpenCV::Detect() {
+  if (!markers_.hasImage)
+    return false;
 
-  cv::aruco::detectMarkers(markers.pImageStamped->image, dict_, markers.markerCorners,
-    markers.markerIds, param_, markers.rejectedCandidates, p_.cameraMatrix, p_.distCoeffs);
+  cv::aruco::detectMarkers(markers_.pImageStamped->image, dict_, markers_.markerCorners,
+    markers_.markerIds, param_, markers_.rejectedCandidates, p_.cameraMatrix, p_.distCoeffs);
 
-  return !markers.IsEmpty();
+  return !markers_.IsEmpty();
 }
 
-bool ArucoDetectorOpenCV::PoseEstimate(my_aruco::Markers& markers) {
-  cv::aruco::estimatePoseSingleMarkers(markers.markerCorners, p_.markerSize,
-    p_.cameraMatrix, p_.distCoeffs, markers.rvecs, markers.tvecs);
+bool ArucoDetectorOpenCV::PoseEstimate() {
+  cv::aruco::estimatePoseSingleMarkers(markers_.markerCorners, p_.markerSize,
+    p_.cameraMatrix, p_.distCoeffs, markers_.rvecs, markers_.tvecs);
 
   return true;
 }

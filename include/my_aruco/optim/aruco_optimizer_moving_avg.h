@@ -9,15 +9,19 @@ namespace my_aruco::optim
 class ArucoOptimizerMovingAvg : public ArucoOptimizer {
 public:
   ArucoOptimizerMovingAvg() = delete;
-  ArucoOptimizerMovingAvg(const Parameters& p);
+  ArucoOptimizerMovingAvg(const Parameters&, const ros::NodeHandle&);
+
+  void Run();
+
+  void Update1D() override;
 
   void SetWindowSize(int size);
-  void Update(my_aruco::Markers& markers);
 
 private:
   int windowSize_ = 5;
   std::vector<double> buffer_;
 
+  double optimizedAngle_;
 };
 
 } // namespace my_aruco:optim

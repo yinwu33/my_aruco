@@ -13,7 +13,7 @@ bool ArucoCalibrator::Valid() {
 }
 
 void ArucoCalibrator::Calib() {
-
+  
 }
   
 } // namespace my_aruco::optim

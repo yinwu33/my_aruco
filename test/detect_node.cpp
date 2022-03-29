@@ -1,13 +1,12 @@
-#include "my_aruco/detector/aruco_detector_opencv.h"
-#include "my_aruco/optim/aruco_optimizer_moving_avg.h"
+#include "my_aruco/detector/aruco_detector_factory.hpp"
 
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "aruco_detect_node");
 
-  ros::NodeHandle nh, nh_private("~");
+  ros::NodeHandle nh;
 
-  std::string configFile = nh_private.param<std::string>("config_file", "");
+  std::string configFile = nh.param<std::string>("config_file", "");
 
   if (configFile == "") {
     std::cerr << "Please give a config file path";
@@ -20,20 +19,16 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  std::cout << "==============" << std::endl;
   my_aruco::Parameters p(fs);
+  p.Logging();
 
-  my_aruco::detector::ArucoDetectorOpenCV detector(p, nh);
-
-  my_aruco::optim::ArucoOptimizerMovingAvg optimizer(p, nh);
-
+  my_aruco::detector::ArucoDetector::Ptr pDetector = my_aruco::detector::create(p, nh);
 
   ros::Rate rate(p.fps);
 
   while (ros::ok()) {
-    detector.Run();
-    optimizer.Run();
-
+    ros::spinOnce();
+    pDetector->Run();
     rate.sleep();
   }
 

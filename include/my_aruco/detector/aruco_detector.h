@@ -3,6 +3,10 @@
 #include "my_aruco/utils/parameters.h"
 #include "my_aruco/types/markers.h"
 #include "my_aruco/types/image_stamped.hpp"
+#include "my_aruco_msg/AngleStamped.h"
+
+#include "sensor_msgs/Image.h"
+#include "cv_bridge/cv_bridge.h"
 
 namespace my_aruco::detector
 {
@@ -12,24 +16,33 @@ public:
 
   // EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 
-  using Ptr = std::unique_ptr<ArucoDetector>; 
+  using Ptr = std::unique_ptr<ArucoDetector>;
 
   ArucoDetector() = delete;
-  ArucoDetector(const my_aruco::Parameters& p);
+  ArucoDetector(const my_aruco::Parameters& p, const ros::NodeHandle&);
 
-  virtual bool Detect(my_aruco::Markers& markers) = 0;
-  virtual bool PoseEstimate(my_aruco::Markers& markers) = 0;
+  virtual void Run();
 
-  void GetAvgResult();
+  virtual bool Detect() = 0;
+  virtual bool PoseEstimate() = 0;
 
-  virtual void GetYaw(my_aruco::Markers& markers);
-  virtual void GetResult(Eigen::Vector3d&) {}; // todo
-  virtual void GetResult(Eigen::Matrix4d&) {}; // todo
-
+  void GetYaw(double& angle);
+  void GetResult(Eigen::Vector3d&) {}; // todo
+  void GetResult(Eigen::Matrix4d&) {}; // todo
 
 protected:
   Parameters p_;
 
+  ros::NodeHandle nh_;
+  ros::Publisher measurementPub_;
+  ros::Subscriber imageSub_;
+
+  ImageStamped currImage_;
+  Markers markers_;
+
+
+private:
+  void ImageCallback(const sensor_msgs::Image::Ptr&);
 };
-  
+
 } // namespace my_aruco::detector

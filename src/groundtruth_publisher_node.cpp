@@ -2,7 +2,7 @@
 #include <tf/transform_listener.h>
 #include <geometry_msgs/PointStamped.h>
 #include <std_msgs/Float64.h>
-#include <my_aruco/AngleStamped.h>
+#include <my_aruco_msg/AngleStamped.h>
 
 #include <string>
 
@@ -18,7 +18,7 @@ static double calculateYaw(const Eigen::Quaterniond& q) {
 int main(int argc, char** argv) {
   ros::init(argc, argv, "groundtruth_publisher_node");
   ros::NodeHandle nh, nh_private("~");
-  ros::Publisher gt_pub = nh.advertise<my_aruco::AngleStamped>("groundtruth", 100);
+  ros::Publisher gt_pub = nh.advertise<my_aruco_msg::AngleStamped>("groundtruth", 100);
 
   std::string frame_id = nh_private.param<std::string>("frame_id", "panda_link0");
   std::string child_frame_id = nh_private.param<std::string>("child_frame_id", "camera");
@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
 
   tf::TransformListener listener;
 
-  my_aruco::AngleStamped groundtruth;
+  my_aruco_msg::AngleStamped groundtruth;
 
   tf::StampedTransform transform;
 

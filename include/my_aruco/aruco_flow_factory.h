@@ -4,7 +4,7 @@
 #include "my_aruco/detector/aruco_detector_factory.hpp"
 #include "my_aruco/optim/aruco_optimizer_factory.hpp"
 #include "my_aruco/types/markers.h"
-#include "my_aruco/AngleStamped.h"
+#include "my_aruco_msg/AngleStamped.h"
 
 #include <sensor_msgs/Image.h>
 #include <cv_bridge/cv_bridge.h>

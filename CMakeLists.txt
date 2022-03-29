@@ -16,7 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   geometry_msgs
   message_generation
-  aruco
+  my_aruco_msg
 )
 
 find_package(Eigen3 REQUIRED)
@@ -55,11 +55,11 @@ find_package(Eigen3 REQUIRED)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  AngleStamped.msg
-  # Message2.msg
-)
+# add_message_files(
+#   FILES
+#   AngleStamped.msg
+#   # Message2.msg
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -76,11 +76,11 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  # sensor_msgs#   std_msgs
-  std_msgs
-)
+# generate_messages(
+#   DEPENDENCIES
+#   # sensor_msgs#   std_msgs
+#   std_msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -114,7 +114,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES my_aruco
- CATKIN_DEPENDS cv_bridge roscpp sensor_msgs std_msgs message_runtime aruco
+ CATKIN_DEPENDS cv_bridge roscpp sensor_msgs std_msgs message_runtime my_aruco_msg  
 #  DEPENDS system_lib
 )
 
@@ -137,15 +137,22 @@ add_library(${PROJECT_NAME}
   src/optim/aruco_optimizer_moving_avg.cpp
   src/optim/aruco_calibrator.cpp
   src/types/markers.cpp
+  src/types/markers.cpp
   src/utils/parameters.cpp
-  src/aruco_flow_factory.cpp
+  # src/aruco_flow_factory.cpp
   include/my_aruco/common_include.hpp
+  include/my_aruco/types/image_stamped.hpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} Eigen3::Eigen)
 
-add_executable(aruco_detect_node test/aruco_detect_node.cpp)
+add_executable(aruco_detect_node test/detect_node.cpp)
 target_link_libraries(aruco_detect_node ${catkin_LIBRARIES}
+Eigen3::Eigen
+${PROJECT_NAME})
+
+add_executable(aruco_optim_node test/optim_node.cpp)
+target_link_libraries(aruco_optim_node ${catkin_LIBRARIES}
 Eigen3::Eigen
 ${PROJECT_NAME})
 

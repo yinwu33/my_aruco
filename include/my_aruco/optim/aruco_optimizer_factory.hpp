@@ -7,11 +7,11 @@
 namespace my_aruco::optim
 {
 
-std::unique_ptr<ArucoOptimizer> create(const Parameters& p) {
+std::unique_ptr<ArucoOptimizer> create(const Parameters& p, const ros::NodeHandle& nh) {
   switch (p.optimizer)
   {
   case my_aruco::Optimizer::MOVING_AVG:
-    return std::make_unique<ArucoOptimizerMovingAvg>(p);
+    return std::make_unique<ArucoOptimizerMovingAvg>(p, nh);
   
   default:
     return nullptr;

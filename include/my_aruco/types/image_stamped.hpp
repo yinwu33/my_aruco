@@ -11,7 +11,7 @@ struct ImageStamped {
 
   using Ptr = std::shared_ptr<ImageStamped>;
 
-  ImageStamped();
+  ImageStamped() = default;
   ImageStamped(ros::Time timestamp, cv::Mat image) : timestamp(timestamp), image(image) {}
 
 

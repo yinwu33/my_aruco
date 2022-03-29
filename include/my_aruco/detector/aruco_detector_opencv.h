@@ -2,6 +2,7 @@
 
 #include "my_aruco/detector/aruco_detector.h"
 #include "my_aruco/utils/parameters.h"
+#include "my_aruco/types/markers.h"
 
 
 namespace my_aruco::detector {
@@ -9,12 +10,11 @@ namespace my_aruco::detector {
 class ArucoDetectorOpenCV : public ArucoDetector {
 public:
   ArucoDetectorOpenCV() = delete;
-  ArucoDetectorOpenCV(const Parameters& p);
+  ArucoDetectorOpenCV(const Parameters&, const ros::NodeHandle&);
 
-  bool Detect(my_aruco::Markers& );
+  bool Detect();
 
-  bool PoseEstimate(my_aruco::Markers& );
-
+  bool PoseEstimate();
 
 private:
   cv::Ptr<cv::aruco::Dictionary> dict_;

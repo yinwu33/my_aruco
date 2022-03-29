@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="config_file" default="webcam_example.yaml"/>
+  <!-- ================================================================================== -->
+
+  <include file="$(find my_aruco)/launch/others/image_publish.launch" />
+
+  <param name="config_file" value="$(find my_aruco)/config/$(arg config_file)"/>
+  
+  <node pkg="my_aruco" type="aruco_detect_node" name="aruco_detect_node" output="screen" required="true"/>
+  <node pkg="my_aruco" type="aruco_optim_node" name="aruco_optim_node" output="screen" />
+</launch>

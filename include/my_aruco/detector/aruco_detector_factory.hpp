@@ -5,11 +5,11 @@
 
 namespace my_aruco::detector
 {
-std::unique_ptr<ArucoDetector> create(const Parameters& p) {
+std::unique_ptr<ArucoDetector> create(const Parameters& p, const ros::NodeHandle& nh) {
   switch (p.detector)
   {
   case my_aruco::Detector::OPENCV:
-    return std::make_unique<ArucoDetectorOpenCV>(p);
+    return std::make_unique<ArucoDetectorOpenCV>(p, nh);
 
   default:
     return nullptr;
