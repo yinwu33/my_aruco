@@ -22,7 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(Eigen3 REQUIRED)
 
 find_package(OpenCV REQUIRED)
-include_directories(${OPENCV_INCLUDE_DIRS})
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -147,7 +147,7 @@ add_library(${PROJECT_NAME}
   include/my_aruco/types/image_stamped.hpp
 )
 
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} Eigen3::Eigen ${OPENCV_LIBS})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} Eigen3::Eigen ${OpenCV_LIBS})
 
 # * detect node
 add_executable(aruco_detect_node test/detect_node.cpp)
@@ -155,7 +155,7 @@ add_executable(aruco_detect_node test/detect_node.cpp)
 target_link_libraries(aruco_detect_node ${catkin_LIBRARIES}
 Eigen3::Eigen
 ${PROJECT_NAME}
-${OPENCV_LIBS}
+${OpenCV_LIBS}
 )
 
 # * optim node
@@ -164,7 +164,7 @@ add_executable(aruco_optim_node test/optim_node.cpp)
 target_link_libraries(aruco_optim_node ${catkin_LIBRARIES}
 Eigen3::Eigen
 ${PROJECT_NAME}
-${OPENCV_LIBS}
+${OpenCV_LIBS}
 )
 
 ## Add cmake target dependencies of the library
@@ -186,7 +186,7 @@ ${OPENCV_LIBS}
 add_executable(image_publisher_node src/image_publisher_node.cpp)
 
 target_link_libraries(image_publisher_node 
-${OPENCV_LIBS}
+${OpenCV_LIBS}
 ${catkin_LIBRARIES}
 )
 
@@ -195,7 +195,7 @@ add_executable(groundtruth_publisher_node src/groundtruth_publisher_node.cpp)
 target_link_libraries(groundtruth_publisher_node
 ${catkin_LIBRARIES}
 Eigen3::Eigen
-${OPENCV_LIBS}
+${OpenCV_LIBS}
 )
 
 # add_executable(optim_node src/optim_node.cpp
@@ -223,7 +223,7 @@ add_executable(sim_groundtruth_publisher_node src/sim_groundtruth_publisher_node
 target_link_libraries(sim_groundtruth_publisher_node
 ${catkin_LIBRARIES}
 Eigen3::Eigen
-${OPENCV_LIBS}
+${OpenCV_LIBS}
 )
 
 # target_link_libraries(optim_node
