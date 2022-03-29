@@ -15,7 +15,7 @@ bool ArucoDetectorOpenCV::Detect() {
     return false;
 
   cv::aruco::detectMarkers(markers_.pImageStamped->image, dict_, markers_.markerCorners,
-    markers_.markerIds, param_, markers_.rejectedCandidates, p_.cameraMatrix, p_.distCoeffs);
+    markers_.markerIds, param_, markers_.rejectedCandidates);
 
   return !markers_.IsEmpty();
 }
