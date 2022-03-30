@@ -81,6 +81,7 @@ int main(int argc, char** argv) {
   ros::NodeHandle nh;
 
   PIDController pid(nh);
+  pid.SetPID(1, 00.1, 0.01);
 
   ros::spin();
 }
