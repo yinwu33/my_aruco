@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="config_file" default="framos_example.yaml"/>
-  <arg groundtruth="publish_groundtruth" default="false"/>
+  <arg name="publish_groundtruth" default="false"/>
 
   <param name="config_file" value="$(find my_aruco)/config/$(arg config_file)"/>
   
