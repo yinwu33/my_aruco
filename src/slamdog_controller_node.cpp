@@ -7,7 +7,7 @@ class PIDController {
 public:
   PIDController(const ros::NodeHandle& nh) : nh_(nh) {
     cmdVelPub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 100);
-    angleSub_ = nh_.subscribe("measurenment", 100, &PIDController::MsgCallback, this);
+    angleSub_ = nh_.subscribe("measurement", 100, &PIDController::MsgCallback, this);
 
     last_time_ = ros::Time(0);
 
