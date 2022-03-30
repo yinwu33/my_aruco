@@ -197,6 +197,10 @@ ${catkin_LIBRARIES}
 Eigen3::Eigen
 ${OpenCV_LIBS}
 )
+add_executable(pid_control_node src/slamdog_controller_node.cpp)
+target_link_libraries(pid_control_node
+${catkin_LIBRARIES}
+)
 
 # add_executable(optim_node src/optim_node.cpp
 #                           src/optim/kalman_filter_ddrobot.cpp)
