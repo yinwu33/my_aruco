@@ -1,9 +1,14 @@
 <?xml version="1.0"?>
 <launch>
-  <node pkg="my_aruco" type="aruco_detect_node" name="aruco_detect_node" output="screen" required="true">
-    <param name="config_file" value="$(find my_aruco)/config/framos.yaml"/>
-  </node>
+  <arg name="config_file" default="framos_example.yaml"/>
+  <arg groundtruth="publish_groundtruth" default="false"/>
 
-  <include file="$(find my_aruco)/launch/others/groundtruth_publisher.launch" />
+  <param name="config_file" value="$(find my_aruco)/config/$(arg config_file)"/>
+  
+  <node pkg="my_aruco" type="aruco_detect_node" name="aruco_detect_node" output="screen" required="true"/>
+  <node pkg="my_aruco" type="aruco_optim_node" name="aruco_optim_node" output="screen" />
+
+  <!-- if use franka robot arm, the groundtruth cound be read from tf -->
+  <include file="$(find my_aruco)/launch/others/groundtruth_publisher.launch" if="$(arg publish_groundtruth)"/>
 
 </launch>
