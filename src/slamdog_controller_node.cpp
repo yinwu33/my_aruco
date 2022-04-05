@@ -53,6 +53,12 @@ public:
     // final output
     double w = pTerm + iTerm + dTerm;
 
+    if (w > 0.1)
+      w = 0.1;
+
+    if (w < -0.1)
+      w = -0.1;
+
     controlMsg_.angular.z = w;
 
     cmdVelPub_.publish(controlMsg_);
