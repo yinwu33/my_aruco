@@ -53,10 +53,10 @@ public:
     // final output
     double w = pTerm + iTerm + dTerm;
 
-    if (w > 0.1)
+    if (w > 0.2)
       w = 0.1;
 
-    if (w < -0.1)
+    if (w < -0.2)
       w = -0.1;
 
     controlMsg_.angular.z = w;
