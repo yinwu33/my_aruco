@@ -20,6 +20,10 @@ public:
     kd_ = d;
   }
 
+  void SetDefaultAngle(double angle) {
+    defaultVel_ = angle;
+  }
+
   void MsgCallback(const my_aruco_msg::AngleStamped::Ptr& msg) {
     if (last_time_ == ros::Time(0)) {
       last_time_ = msg->header.stamp;
@@ -80,8 +84,14 @@ int main(int argc, char** argv) {
   ros::init(argc, argv, "pid_controller");
   ros::NodeHandle nh;
 
+
   PIDController pid(nh);
   pid.SetPID(1, 00.1, 0.01);
+  if (argc == 2) {
+    double vel = atof(argv[1]);
+    std::cout << "setting default angle to " << vel << std::endl;
+    pid.SetDefaultAngle(vel);
+  }
 
   ros::spin();
 }
