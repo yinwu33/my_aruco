@@ -100,4 +100,6 @@ int main(int argc, char** argv) {
   }
 
   ros::spin();
+
+  std::cout << "bye bye" << std::endl;
 }
