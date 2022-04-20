@@ -248,8 +248,7 @@ ${OpenCV_LIBS}
 catkin_install_python(PROGRAMS
   scripts/simulation/slamdog_controller_node.py
   scripts/simulation/slamdog_state_publisher.py
-  scripts/simulation/robot_controller_node.py
-  scripts/simulation/reverse_pid_controller_node.py
+  scripts/simulation/robot_arm_controller_node.py
   scripts/evaluator.py
   scripts/recorder.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
