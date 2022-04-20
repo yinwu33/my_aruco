@@ -5,15 +5,9 @@ namespace my_aruco::detector
 {
 ArucoDetector::ArucoDetector(const Parameters& p, const ros::NodeHandle& nh) : p_(p), nh_(nh) {
 
+  measurementPub_ = nh_.advertise<my_aruco_msg::AngleStamped>("measurement", 100);
   imageSub_ = nh_.subscribe(p_.topicImageRaw, 100, &ArucoDetector::ImageCallback, this);
 
-  if (p_.mode == Mode::ARUCO_1D) {
-    measurementPub_ = nh_.advertise<my_aruco_msg::AngleStamped>("measurement", 100);
-  }
-  else {
-    throw;
-  }
-  // todo: other mode 3D, 6D
 }
 
 /**
@@ -25,15 +19,12 @@ void ArucoDetector::Run() {
     return;
   PoseEstimate();
 
-  // 1D mode: detect yaw angle
-  if (p_.mode == Mode::ARUCO_1D) {
-    my_aruco_msg::AngleStamped msg;
-    msg.header.stamp = markers_.pImageStamped->timestamp;
-    GetYaw(msg.radian);
-    msg.degree = msg.radian * 180 / M_PI;
+  my_aruco_msg::AngleStamped msg;
+  msg.header.stamp = markers_.pImageStamped->timestamp;
+  GetYaw(msg.radian);
+  msg.degree = msg.radian * 180 / M_PI;
 
-    measurementPub_.publish(msg);
-  }
+  measurementPub_.publish(msg);
 }
 
 void ArucoDetector::GetYaw(double& angle) {

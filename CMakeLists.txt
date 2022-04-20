@@ -145,8 +145,8 @@ add_library(${PROJECT_NAME}
   src/types/markers.cpp
   src/types/markers.cpp
   src/utils/parameters.cpp
-  include/my_aruco/common_include.hpp
-  include/my_aruco/types/image_stamped.hpp
+  # include/my_aruco/common_include.hpp
+  # include/my_aruco/types/image_stamped.hpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} Eigen3::Eigen ${OpenCV_LIBS})

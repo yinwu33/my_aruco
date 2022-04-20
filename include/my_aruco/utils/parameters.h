@@ -20,10 +20,6 @@ enum class OnlineCalib {
   DO
 };
 
-enum class Mode {
-  ARUCO_1D = 0
-};
-
 struct Parameters {
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW; // ? todo
@@ -33,8 +29,6 @@ struct Parameters {
   Parameters(const std::string& configFile);
 
   cv::FileStorage fs_;
-
-  Mode mode{Mode::ARUCO_1D};
 
   Detector detector{Detector::OPENCV};
 

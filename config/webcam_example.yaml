@@ -1,6 +1,5 @@
 %YAML:1.0
 
-
 # ==================== general parameters  ====================
 fps: 100
 
@@ -18,7 +17,7 @@ optimizer: 1
 # moving average parameters
 window_size: 10
 
-# kalman filter parameter
+# kalman filter parameters
 P0: 10.0
 Q: 1.0
 R: 1.0

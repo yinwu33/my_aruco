@@ -27,8 +27,6 @@ public:
   virtual bool PoseEstimate() = 0;
 
   void GetYaw(double& angle);
-  void GetResult(Eigen::Vector3d&) {}; // todo
-  void GetResult(Eigen::Matrix4d&) {}; // todo
 
 protected:
   Parameters p_;

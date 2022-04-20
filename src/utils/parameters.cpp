@@ -7,9 +7,6 @@ namespace my_aruco
 {
 Parameters::Parameters(const cv::FileStorage& node) {
 
-  // if ((int)node["mode"] == 0)
-  //   mode = Mode::ARUCO_1D;
-
   if ((int)node["detector"] == 0)
     detector = Detector::OPENCV;
 
@@ -64,15 +61,7 @@ Parameters::Parameters(const std::string& configFile) {
 void Parameters::Logging() {
   std::cout << "==================== Parameter setting ====================\n" << std::endl;
 
-  // switch (mode)
-  // {
-  // case Mode::ARUCO_1D:
-  //   std::cout << "Mode: 1D angle" << std::endl;
-  //   break;
 
-  // default:
-  //   break;
-  // }
 
   switch (detector)
   {
@@ -100,7 +89,6 @@ void Parameters::Logging() {
   std::cout << "Distortion Coeffience: " << distCoeffs << std::endl;
   std::cout << "Marker size: " << markerSize << std::endl;
   std::cout << "window size: " << windowSize << std::endl;
-  // std::cout << "For 1D Mode: " << std::endl;
   std::cout << "Vector will be rotated: " << rotateVector.transpose() << std::endl;
 
   std::unordered_map<int, char> numberToAxis{ std::pair<int, char>{1, 'x'},
