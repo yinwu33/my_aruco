@@ -15,11 +15,6 @@ enum class Optimizer {
   EKF
 };
 
-enum class OnlineCalib {
-  NONE = 0,
-  DO
-};
-
 struct Parameters {
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW; // ? todo

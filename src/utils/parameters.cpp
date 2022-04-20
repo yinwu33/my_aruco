@@ -50,11 +50,6 @@ Parameters::Parameters(const std::string& configFile) {
     throw std::invalid_argument(" config file not exists");
   }
 
-  // if (!pFs->isOpened()) {
-  // // if (!fs.isOpened()) {
-  // }
-
-  // todo: may be wrong, due to local value
   Parameters(fs_);
 }
 

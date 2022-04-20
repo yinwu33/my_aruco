@@ -46,12 +46,6 @@ int main(int argc, char** argv) {
   ROS_INFO("Parameters: \nfps: %i\nvideo: %i\nwidth: %i\nheight: %i", fps, video, width, height);
 
   ros::Publisher image_pub = nh.advertise<sensor_msgs::Image>(image_topic, queue_size);
-  // ros::Publisher camera_info_pub = n.advertise<sensor_msgs::CameraInfo>("camera_info", queue_size); // todo camera info
-
-  // sensor_msgs::CameraInfo info;
-
-  // camera_info_manager::CameraInfoManager manager(n, "camera", "file:///tmp/calibrationdata/ost.yaml");
-  // info = manager.getCameraInfo();
 
   ros::Rate rate(24);
   std::cout << "fps " << fps << std::endl;
@@ -61,7 +55,6 @@ int main(int argc, char** argv) {
 
   cap.set(cv::CAP_PROP_FRAME_WIDTH, width);
   cap.set(cv::CAP_PROP_FRAME_HEIGHT, height);
-  // cap.set(cv::CAP_PROP_FPS, fps);
 
   cv::Mat frame;
   sensor_msgs::ImagePtr msg;
@@ -71,12 +64,7 @@ int main(int argc, char** argv) {
 
     msg = cv_bridge::CvImage(std_msgs::Header(), sensor_msgs::image_encodings::BGR8, frame).toImageMsg();
     msg->header.stamp = ros::Time::now();
-    // cv::waitKey(1);
     image_pub.publish(msg);
-    // camera_info_pub.publish(info);
-
-    // std::cout << "debug" << std::endl; // ??? why bug?
-    // rate.sleep();
   }
 
   return 0;
