@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-    <!-- todo -->
-    <param name="config_file" value="$(find my_aruco)/config/simulation_example.yaml"/>
+    <arg name="config_file" default="$(find my_aruco)/config/simulation_example.yaml"/>
+
+    <!-- ================================================================================== -->
+    <param name="config_file" value="$(arg config_file)"/>
     <node pkg="my_aruco" type="aruco_detect_node" name="aruco_detect_node" output="screen" required="true"/>
     <node pkg="my_aruco" type="aruco_optim_node" name="aruco_optim_node" output="screen" />
 
@@ -12,4 +14,6 @@
         <param name="child_frame_id" value="link_trailer"/>
     </node>
 
+    <!-- robot state to get linear velocity v and angular velocity w -->
+    <node pkg="my_aruco" type="slamdog_state_publisher.py" name="sim_slamdog_state_publisher" required="true"/>
 </launch>

@@ -13,13 +13,13 @@
 static double calculateYaw_arm(const Eigen::Quaterniond& q) {
   // base on sim robot arm
   Eigen::Vector3d vector = -q.matrix() * Eigen::Vector3d(1, 0, 0);
-  return -atan2(vector[1], vector[2]);
+  return atan2(vector[1], vector[2]);
 }
 
 static double calculateYaw_slamdog(const Eigen::Quaterniond& q) {
   // for sim slamdog
   Eigen::Vector3d vector = q.matrix() * Eigen::Vector3d(1, 0, 0);
-  return -atan2(vector[1], vector[0]);
+  return atan2(vector[1], vector[0]);
 }
 
 int main(int argc, char** argv) {

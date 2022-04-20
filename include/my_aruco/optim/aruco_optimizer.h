@@ -17,9 +17,7 @@ public:
 
   virtual void Run() = 0;
 
-  virtual void Update1D() {};
-  virtual void Update3D() {};
-  virtual void Update6D() {};
+  virtual bool Update() = 0;
 
 protected:
   Parameters p_;
@@ -28,9 +26,9 @@ protected:
   ros::Publisher estimationPub_;
   ros::Subscriber measurementSub_;
 
-  my_aruco_msg::AngleStamped angle_;
+  my_aruco_msg::AngleStamped measurement_, estimation_;
 
-  bool newMeasurement_;
+  bool isNewMeasurement_;
 
 private:
   void MsgCallback1D(const my_aruco_msg::AngleStamped::Ptr& msg);

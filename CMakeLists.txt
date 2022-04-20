@@ -134,15 +134,17 @@ include_directories(
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
+  # Detector
   src/detector/aruco_detector.cpp
   src/detector/aruco_detector_opencv.cpp
+  # Optimizer
   src/optim/aruco_optimizer.cpp
   src/optim/aruco_optimizer_moving_avg.cpp
-  src/optim/aruco_calibrator.cpp
+  src/optim/aruco_optimizer_kalman_filter.cpp
+  # Others
   src/types/markers.cpp
   src/types/markers.cpp
   src/utils/parameters.cpp
-  # src/aruco_flow_factory.cpp
   include/my_aruco/common_include.hpp
   include/my_aruco/types/image_stamped.hpp
 )
@@ -245,6 +247,7 @@ ${OpenCV_LIBS}
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
   scripts/simulation/slamdog_controller_node.py
+  scripts/simulation/slamdog_state_publisher.py
   scripts/simulation/robot_controller_node.py
   scripts/simulation/reverse_pid_controller_node.py
   scripts/evaluator.py

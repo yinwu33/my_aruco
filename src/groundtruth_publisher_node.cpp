@@ -12,7 +12,7 @@
 static double calculateYaw(const Eigen::Quaterniond& q) {
   // base on franka robot
   Eigen::Vector3d vector = -q.matrix() * Eigen::Vector3d(0, 0, 1);
-  return atan2(vector[1], vector[2]);
+  return -atan2(vector[1], vector[2]);
 }
 
 int main(int argc, char** argv) {

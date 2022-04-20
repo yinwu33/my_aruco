@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-  <include file="$(find my_aruco)/launch/others/image_publish.launch" />
-
-  <node pkg="my_aruco" type="aruco_detect_node" name="aruco_detect_node" output="screen">
-    <param name="config_file" value="$(find my_aruco)/config/framos.yaml"/>
-  </node>
-</launch>

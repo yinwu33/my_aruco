@@ -1,24 +1,19 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="bagfile_path" default="/home/ubuntu/Workspace/KIT/slamdog/bagfiles/1_good.bag"/>
-  <arg name="image_topic" default="/camera/color/image_raw"/>
-  <arg name="config_file" default="framos_example.yaml"/>
-  <arg name="use_degree" default="false"/>
+  <arg name="bagfile_path" default="/home/ubuntu/Workspace/KIT/slamdog/bagfiles/8_good.bag"/>
+  <arg name="config_file" default="$(find my_aruco)/config/framos_example.yaml"/>
   <arg name="loop" default="false"/>
 
   <!-- ================================================================================== -->
   <param name="use_sim_time" value="true"/>
-  <param name="use_degree" value="$(arg use_degree)"/>
+  <param name="config_file" value="$(arg config_file)"/>
 
+  <!-- play bagfile -->
   <node pkg="rosbag" type="play" name="player" args="--clock $(arg bagfile_path)" unless="$(arg loop)" required="true"/>
   <node pkg="rosbag" type="play" name="player" args="--clock -l $(arg bagfile_path)" if="$(arg loop)" required="true"/>
 
   <include file="$(find my_aruco)/launch/others/groundtruth_publisher.launch" />
 
-  <node pkg="my_aruco" type="aruco_detect_node" name="aruco_detect_node" output="screen" required="true">
-    <param name="config_file" value="$(find my_aruco)/config/$(arg config_file)"/>
-  </node>
-
-
-
+  <node pkg="my_aruco" type="aruco_detect_node" name="aruco_detect_node" output="screen" required="true"/>
+  <node pkg="my_aruco" type="aruco_optim_node" name="aruco_optim_node" output="screen" />
 </launch>

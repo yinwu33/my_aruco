@@ -1,13 +1,11 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="image_topic" default="image_raw"/>
-    <arg name="config_file" default="example.yaml"/>
-    <!-- ================================================================================== -->
+    <arg name="config_file" default="$(find my_aruco)/config/webcam_example.yaml"/>
 
+    <!-- ================================================================================== -->
     <include file="$(find my_aruco)/launch/others/image_publish.launch" />
 
-    <node pkg="my_aruco" type="my_aruco_node" name="my_aruco_node" output="screen" required="true">
-        <param name="image_topic" value="$(arg image_topic)"/>
-        <param name="config_file" value="$(find my_aruco)/config/$(arg config_file)"/>
-    </node>
+    <param name="config_file" value="$(arg config_file)"/>
+    <node pkg="my_aruco" type="aruco_detect_node" name="aruco_detect_node" output="screen" required="true"/>
+    <node pkg="my_aruco" type="aruco_optim_node" name="aruco_optim_node" output="screen" />
 </launch>

@@ -13,7 +13,7 @@ public:
 
   void Run();
 
-  void Update1D() override;
+  bool Update() override;
 
   void SetWindowSize(int size);
 

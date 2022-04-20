@@ -44,7 +44,7 @@ void ArucoDetector::GetYaw(double& angle) {
     markers_.GetQuaternion(markers_.rvecs[i], q);
 
     Eigen::Vector3d vector = -q.matrix() * p_.rotateVector;
-    yawList.emplace_back(atan2(vector[p_.projectPlane.first - 1], vector[p_.projectPlane.second - 1]));
+    yawList.emplace_back(-atan2(vector[p_.projectPlane.first - 1], vector[p_.projectPlane.second - 1]));
   }
 
   // filter outlier when detect more than 4 arucos

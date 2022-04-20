@@ -23,6 +23,9 @@ int main(int argc, char** argv) {
 
   my_aruco::optim::ArucoOptimizer::Ptr pOptimizer = my_aruco::optim::create(p, nh);
 
+  if (pOptimizer == nullptr)
+    return EXIT_SUCCESS;
+
   ros::Rate rate(p.fps);
 
   while (ros::ok()) {

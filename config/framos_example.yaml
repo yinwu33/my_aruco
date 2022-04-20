@@ -2,23 +2,26 @@
 
 # ==================== detector mode ====================
 
-# Mode
-# 0: 1D, get yaw angle
-mode: 0
+# # Mode
+# # 0: 1D, get yaw angle
+# mode: 0
 
 # Detector
 # 0: based on OpenCV
 detector: 0
 
 # Optimizer
-# 0: Moving Average
-optimizer: 0
+# 0: None
+# 1: Moving Average
+# 1: EKF
+optimizer: 1
 
-fps: 25 # big fps will detect on image multiple times
+fps: 1000 # big fps will detect on image multiple times
 
 # ==================== camera informations ====================
 width: 848
 height: 480
+
 # camera matrix
 K: !!opencv-matrix
     rows: 3
@@ -33,7 +36,6 @@ D: !!opencv-matrix
     dt: f
     data: [ 0.07543221487292956, -0.1418134289221999, 0.004338076200071399, -0.004246885746402398, 0.0 ]
 
-camera_frame_id: "camera"
 
 # ==================== marker informations ====================
 # marker informations
@@ -51,14 +53,18 @@ plane_vector_2: 3
 
 # ==================== ros informations ====================
 do_publish: 0  # 0 for false 1 for true
-topic_name_marker_poses: "marker_poses"
 topic_image_aruco: "aruco_image"
 topic_image_raw: "/camera/color/image_raw"
 
+# moving average filter
+window_size: 40
+
 # ==================== kalman filter ====================
+# robot model
+l1: 0.4
+l2: 1
 
-window_size: 5
-
+# kalman filter
 P0: 10.0
 Q: 1.0
 R: 1.0

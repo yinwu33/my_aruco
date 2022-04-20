@@ -10,7 +10,14 @@ enum class Detector {
 };
 
 enum class Optimizer {
-  MOVING_AVG = 0
+  NONE = 0,
+  MOVING_AVG,
+  EKF
+};
+
+enum class OnlineCalib {
+  NONE = 0,
+  DO
 };
 
 enum class Mode {
@@ -31,7 +38,7 @@ struct Parameters {
 
   Detector detector{Detector::OPENCV};
 
-  Optimizer optimizer{Optimizer::MOVING_AVG};
+  Optimizer optimizer{Optimizer::NONE};
 
   cv::Mat cameraMatrix;
   cv::Mat distCoeffs;
@@ -46,7 +53,15 @@ struct Parameters {
   std::string topicImageRaw;
   std::string topicImageAruco;
 
+  std::string topicRobotState;
+
   size_t fps;
+
+  // kalman filter parameters
+  double P0, Q, R;
+  // robot model parameters
+  double l1;
+  double l2;
 
 public:
   void Logging();

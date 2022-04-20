@@ -7,20 +7,25 @@ namespace my_aruco
 {
 Parameters::Parameters(const cv::FileStorage& node) {
 
-  if ((int)node["mode"] == 0)
-    mode = Mode::ARUCO_1D;
+  // if ((int)node["mode"] == 0)
+  //   mode = Mode::ARUCO_1D;
 
   if ((int)node["detector"] == 0)
     detector = Detector::OPENCV;
 
   if ((int)node["optimizer"] == 0)
+    optimizer = Optimizer::NONE;
+  else if ((int)node["optimizer"] == 1)
     optimizer = Optimizer::MOVING_AVG;
+  else if ((int)node["optimizer"] == 2)
+    optimizer = Optimizer::EKF;
 
   node["K"] >> cameraMatrix;
   node["D"] >> distCoeffs;
 
   topicImageRaw = (std::string)node["topic_image_raw"];
-  topicImageAruco = (std::string)node["topic_image_aruco"];
+  // topicImageAruco = (std::string)node["topic_image_aruco"];
+  topicRobotState = (std::string)node["topic_robot_state"];
 
   markerSize = (double)node["marker_size"];
 
@@ -35,6 +40,12 @@ Parameters::Parameters(const cv::FileStorage& node) {
 
   fps = (int)node["fps"];
 
+  // * kalman filter parameters
+  l1 = (double)node["l1"];
+  l2 = (double)node["l2"];
+  P0 = (double)node["P0"];
+  Q = (double)node["Q"];
+  R = (double)node["R"];
 }
 
 Parameters::Parameters(const std::string& configFile) {
@@ -53,15 +64,15 @@ Parameters::Parameters(const std::string& configFile) {
 void Parameters::Logging() {
   std::cout << "==================== Parameter setting ====================\n" << std::endl;
 
-  switch (mode)
-  {
-  case Mode::ARUCO_1D:
-    std::cout << "Mode: 1D angle" << std::endl;
-    break;
+  // switch (mode)
+  // {
+  // case Mode::ARUCO_1D:
+  //   std::cout << "Mode: 1D angle" << std::endl;
+  //   break;
 
-  default:
-    break;
-  }
+  // default:
+  //   break;
+  // }
 
   switch (detector)
   {
@@ -78,6 +89,8 @@ void Parameters::Logging() {
   case Optimizer::MOVING_AVG:
     std::cout << "Optimizer: Moving Average" << std::endl;
     break;
+  case Optimizer::EKF:
+    std::cout << "Optimizer: Extend Kalman Filter" << std::endl;
 
   default:
     break;
@@ -87,7 +100,7 @@ void Parameters::Logging() {
   std::cout << "Distortion Coeffience: " << distCoeffs << std::endl;
   std::cout << "Marker size: " << markerSize << std::endl;
   std::cout << "window size: " << windowSize << std::endl;
-  std::cout << "For 1D Mode: " << std::endl;
+  // std::cout << "For 1D Mode: " << std::endl;
   std::cout << "Vector will be rotated: " << rotateVector.transpose() << std::endl;
 
   std::unordered_map<int, char> numberToAxis{ std::pair<int, char>{1, 'x'},
@@ -97,7 +110,18 @@ void Parameters::Logging() {
     << " and " << numberToAxis[projectPlane.second] << std::endl;
 
   std::cout << "image raw topic: " << topicImageRaw << std::endl;
-  std::cout << "image aruco topic: " << topicImageAruco << std::endl;
+  // std::cout << "image aruco topic: " << topicImageAruco << std::endl;
+  std::cout << "robot state topic: " << topicRobotState << std::endl;
+  
+
+  std::cout << "fps: " << fps << std::endl;
+  
+  // kalman filter parameters
+  std::cout << "l1: " << l1 << std::endl;
+  std::cout << "l2: " << l2 << std::endl;
+  std::cout << "P0: " << P0 << std::endl;
+  std::cout << "Q: " << Q << std::endl;
+  std::cout << "R: " << R << std::endl;
   std::cout << "==================== Logging Finished ====================\n" << std::endl;
 
 }

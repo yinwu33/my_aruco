@@ -7,22 +7,23 @@ ArucoOptimizerMovingAvg::ArucoOptimizerMovingAvg(const Parameters& p, const ros:
 }
 
 void ArucoOptimizerMovingAvg::Run() {
-  Update1D();
+  Update();
 
-  angle_.radian = optimizedAngle_;
-  angle_.degree = optimizedAngle_ * 180 / M_PI;
+  estimation_ = measurement_;
+  estimation_.radian = optimizedAngle_;
+  estimation_.degree = optimizedAngle_ * 180 / M_PI;
 
-  estimationPub_.publish(angle_);
+  estimationPub_.publish(estimation_);
 
-  newMeasurement_ = false;
+  isNewMeasurement_ = false;
 }
 
-void ArucoOptimizerMovingAvg::Update1D() {
-  if (!newMeasurement_)
-    return; 
+bool ArucoOptimizerMovingAvg::Update() {
+  if (!isNewMeasurement_)
+    return false; 
 
   if (windowSize_ == 0)
-    return;
+    return false;
 
   // keep the buffer size
   if (buffer_.size() >= windowSize_) {
@@ -30,7 +31,7 @@ void ArucoOptimizerMovingAvg::Update1D() {
     std::swap(tempBuffer, buffer_);
   }
 
-  buffer_.emplace_back(angle_.radian);
+  buffer_.emplace_back(measurement_.radian);
 
   double sum = 0.0;
   for (size_t i = 0; i < buffer_.size(); ++i) {
@@ -38,6 +39,8 @@ void ArucoOptimizerMovingAvg::Update1D() {
   }
 
   optimizedAngle_ = sum / buffer_.size();
+
+  return true;
 }
 
 void ArucoOptimizerMovingAvg::SetWindowSize(int size) {

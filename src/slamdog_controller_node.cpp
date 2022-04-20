@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
 
 
   PIDController pid(nh);
-  pid.SetPID(1, 00.1, 0.01);
+  pid.SetPID(1, 0.01, 0.01);
   if (argc == 2) {
     double angle = atof(argv[1]);
     std::cout << "setting default angle to " << angle << std::endl;

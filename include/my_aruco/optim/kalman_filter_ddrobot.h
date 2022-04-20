@@ -17,9 +17,9 @@ namespace my_aruco
 
 class KalmanFilterDDRobot {
 public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 
-    KalmanFilterDDRobot() = delete;
+  KalmanFilterDDRobot() = delete;
   KalmanFilterDDRobot(ros::NodeHandle& nh, cv::FileNode& node);
 
   void LeftVelCallback(const std_msgs::Float64::ConstPtr& msg);

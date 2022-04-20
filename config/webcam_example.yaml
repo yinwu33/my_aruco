@@ -1,14 +1,37 @@
 %YAML:1.0
 
-mode: 0
 
+# ==================== general parameters  ====================
+fps: 100
+
+# Detector
+# aruco marker detection and pose estimation block)
+# 0: based on OpenCV
 detector: 0
 
-optimizer: 0
+# Optimizer
+# 0: None
+# 1: Moving Average
+# 2: EKF
+optimizer: 1
 
+# moving average parameters
+window_size: 10
+
+# kalman filter parameter
+P0: 10.0
+Q: 1.0
+R: 1.0
+
+# slamdog with trailer model
+# l1: length from center of slamdog to joint
+# l2: length from joint to center of trailer
+l1: 0.4
+l2: 1
 # ==================== camera informations ====================
 width: 640
 height: 480
+
 # camera matrix
 K: !!opencv-matrix
     rows: 3
@@ -23,13 +46,16 @@ D: !!opencv-matrix
     dt: f
     data: [ 0.0, 0.0, 0.0, 0.0, 0.0 ]
 
-
-camera_frame_id: "camera"
-
 # ==================== marker informations ====================
-# marker informations
+# lenght of the marker
+# not important for yaw angle estimation
 marker_size: 0.079
 
+# map the 3 DoF rotation matrix to an angle
+# e.g. 
+# direct output is R, use R to rotate vector (0, 0, 1) and project it to xz plane
+# parameters depends on the orientation of the coordinate
+# detailed principle see PPT
 rotation_vector: !!opencv-matrix
     rows: 1
     cols: 3
@@ -40,13 +66,5 @@ plane_vector_1: 1
 plane_vector_2: 3
 
 # ==================== ros informations ====================
-topic_image_aruco: "aruco_image"
 topic_image_raw: "image_raw"
-
-fps: 100
-
-window_size: 10
-
-P0: 10.0
-Q: 1.0
-R: 1.0
+topic_robot_state: "/slamdog_state" # for kalman filter to get v and w
